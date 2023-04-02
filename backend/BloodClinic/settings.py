@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'doctors',
     'rest_framework',
     'django_extensions',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

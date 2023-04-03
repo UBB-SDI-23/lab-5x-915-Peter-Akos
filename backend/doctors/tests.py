@@ -2,8 +2,8 @@ import datetime
 
 from django.test import TestCase
 
+from doctors.Views.Reports import ClinicReport, DoctorBloodBagReport
 from doctors.models import Clinic, Doctor, Donor, DoctorsDonors, BloodBag
-from doctors.views import DoctorBloodBagReport, ClinicReport
 
 
 # Create your tests here.

@@ -1,9 +1,13 @@
-from django.urls import path, re_path
-from doctors.views import ListCreateDoctorView, RetrieveUpdateDestroyDoctorView, ListCreateClinicView, \
-    RetrieveUpdateDestroyClinicView, ListCreateDonorView, RetrieveUpdateDestroyDonorView, ListCreateDoctorsDonorsView, \
-    ListCreateBloodBagView, RetrieveUpdateDestroyBloodBagView, DoctorBloodBagReport, ClinicReport, DonorReport,\
-    ListCreateDonorsofDoctorView, RetrieveUpdateDestroyDoctorsDonorsView, schema_view
+from django.urls import path
 
+from doctors.Views.BloodBagViews import ListCreateBloodBagView, RetrieveUpdateDestroyBloodBagView
+from doctors.Views.ClinicViews import ListCreateClinicView, RetrieveUpdateDestroyClinicView
+from doctors.Views.DoctorViews import ListCreateDoctorView, RetrieveUpdateDestroyDoctorView
+from doctors.Views.DoctorsDonorsViews import ListCreateDonorsofDoctorView, ListCreateDoctorsDonorsView, \
+    RetrieveUpdateDestroyDoctorsDonorsView
+from doctors.Views.DonorViews import ListCreateDonorView, RetrieveUpdateDestroyDonorView
+from doctors.Views.Reports import ClinicReport, DoctorBloodBagReport, DonorReport
+from doctors.Views.Utils import schema_view
 
 urlpatterns = [
     path('doctors/', ListCreateDoctorView.as_view()),

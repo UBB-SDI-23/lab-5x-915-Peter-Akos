@@ -92,6 +92,12 @@ const Donors = () => {
               sorting: {
                 sortModel: [{ field: 'id', sort: 'asc' }],
               },
+              columns: {
+                columnVisibilityModel: {
+                  id: false,
+                  doctors:false,
+                },
+              },
             }}
           />
   

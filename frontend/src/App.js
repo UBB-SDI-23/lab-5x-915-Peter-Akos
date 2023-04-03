@@ -1,24 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./pages/Layout";
+import Home from "./pages/Home";
+import Page404 from "./pages/Page404";
+import Donors from "./pages/donor/Donors";
+import AddTrip from './pages/donor/AddDonor';
+import EditDonor from './pages/donor/editDonor';
+import DonorDetails from './pages/donor/donorDetails';
+import DeleteDonorConfirmation from './pages/donor/DeleteDonor';
 
-function App() {
+function App() {  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+  <BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Layout />}>
+      <Route index element={<Home />} />
+
+      <Route path="donors/">
+        <Route path="add/" element={<AddTrip />} />
+        <Route path=":donorId/" element={<DonorDetails />} />
+        <Route path=":donorId/edit/" element={<EditDonor />} />
+        <Route path=":donorId/delete/" element={<DeleteDonorConfirmation />} />
+      <Route index element={<Donors />}/>
+
+      </Route>
+
+      <Route path="*" element={<Page404 />} />
+    </Route>
+  </Routes>
+  </BrowserRouter>
+  </>
   );
 }
 

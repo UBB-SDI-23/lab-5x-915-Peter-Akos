@@ -92,7 +92,7 @@ class DonorSerializer(serializers.ModelSerializer):
         fields = "__all__"
         validators = [
             UniqueTogetherValidator(
-                queryset=Clinic.objects.all(),
+                queryset=Donor.objects.all(),
                 fields=['name', 'birthday']
             )
         ]

@@ -14,7 +14,7 @@ urlpatterns = [
     path('clinics/<int:pk>', RetrieveUpdateDestroyClinicView.as_view()),
     path('clinics/<int:clinic_id>/doctor-bloodbag-report/', DoctorBloodBagReport.as_view()),
     path('donors/', ListCreateDonorView.as_view()),
-    path('donors/<int:pk>', RetrieveUpdateDestroyDonorView.as_view()),
+    path('donors/<int:pk>/', RetrieveUpdateDestroyDonorView.as_view()),
     path('donors/report', DonorReport.as_view()),
     path('bloodbags/', ListCreateBloodBagView.as_view()),
     path('bloodbags/<int:pk>', RetrieveUpdateDestroyBloodBagView.as_view()),

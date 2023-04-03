@@ -1,1 +1,1 @@
-http://www.peter-akos.netlify.app/* https://peter-akos.netlify.app/:splat 301!
+/api/*  http://34.65.147.175/:splat 200

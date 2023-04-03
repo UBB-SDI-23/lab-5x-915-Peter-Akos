@@ -8,6 +8,8 @@ import AddTrip from './pages/donor/AddDonor';
 import EditDonor from './pages/donor/editDonor';
 import DonorDetails from './pages/donor/donorDetails';
 import DeleteDonorConfirmation from './pages/donor/DeleteDonor';
+import Reports from './pages/reports/reports';
+import NumberOfDoctors from './pages/reports/numberOfDoctors';
 
 function App() {  
   return (
@@ -23,6 +25,13 @@ function App() {
         <Route path=":donorId/edit/" element={<EditDonor />} />
         <Route path=":donorId/delete/" element={<DeleteDonorConfirmation />} />
       <Route index element={<Donors />}/>
+
+      </Route>
+
+      <Route path='reports/'>
+        <Route index element={<Reports />}/>
+        <Route path="number-of-doctors-in-clinics/" element={<NumberOfDoctors />} />
+
 
       </Route>
 

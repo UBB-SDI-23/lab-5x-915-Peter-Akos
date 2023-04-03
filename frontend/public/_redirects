@@ -1,2 +1,2 @@
 /api/* http://34.65.147.175/:splat 200!
-/*    /index.html   200
+/*    /pages/Home.js   200

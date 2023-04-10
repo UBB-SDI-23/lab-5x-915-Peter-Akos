@@ -82,13 +82,17 @@ WSGI_APPLICATION = 'BloodClinic.wsgi.application'
 
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'db',
-            'USER': 'postgres',
-            'PASSWORD': 'password',
-            'HOST': '34.65.120.84',
-            'PORT': '5432',
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+    # 'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'NAME': 'db',
+    #         'USER': 'postgres',
+    #         'PASSWORD': 'password',
+    #         'HOST': '34.65.120.84',
+    #         'PORT': '5432',
+    #     }
 }
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

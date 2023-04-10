@@ -140,7 +140,8 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'https://peter-akos.netlify.app',
-    '80.97.241.66',
+    'http://80.97.241.66',
+    'https://80.97.241.66',
 )
 
 REST_FRAMEWORK = {

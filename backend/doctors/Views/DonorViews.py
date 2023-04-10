@@ -5,8 +5,9 @@ from doctors.serializers import DonorSerializer
 
 
 class ListCreateDonorView(ListCreateAPIView):
-    queryset = Donor.objects.all()
+    queryset = Donor.objects.all().order_by('-id')
     serializer_class = DonorSerializer
+    page_size = 100
 
 
 class RetrieveUpdateDestroyDonorView(RetrieveUpdateDestroyAPIView):

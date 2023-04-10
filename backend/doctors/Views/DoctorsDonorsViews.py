@@ -7,8 +7,9 @@ from rest_framework.response import Response
 
 
 class ListCreateDonorsofDoctorView(ListCreateAPIView):
-    queryset = DoctorsDonors.objects.all()
+    queryset = DoctorsDonors.objects.all().order_by('-id')
     serializer_class = DonorsOfDoctorSerializer
+    page_size = 100
 
     def get_queryset(self, *args, **kwargs):
         return self.queryset.filter(doctor=self.kwargs.get('doctor'))

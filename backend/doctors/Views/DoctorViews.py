@@ -5,8 +5,9 @@ from doctors.serializers import DoctorSerializer, DoctorSerializerDetails
 
 
 class ListCreateDoctorView(ListCreateAPIView):
-    queryset = Doctor.objects.all()
+    queryset = Doctor.objects.all().order_by("-id")
     serializer_class = DoctorSerializer
+    page_size = 100
 
 
 class RetrieveUpdateDestroyDoctorView(RetrieveUpdateDestroyAPIView):

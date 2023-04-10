@@ -34,6 +34,7 @@ class Donor(models.Model):
     email = models.EmailField()
     birthday = models.DateField()
     citizenship = models.CharField(max_length=25)
+    description = models.CharField(max_length=500, default="Missing name")
     doctors = models.ManyToManyField(to="Doctor", through="DoctorsDonors")
 
     def __str__(self):
@@ -42,6 +43,7 @@ class Donor(models.Model):
 
 class DoctorsDonors(models.Model):
     donor = models.ForeignKey(to=Donor, on_delete=models.CASCADE)
+    # donor = models.IntegerField()
     doctor = models.ForeignKey(to=Doctor, on_delete=models.CASCADE)
 
     class Meta:

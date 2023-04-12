@@ -50,7 +50,7 @@ const Donors = () => {
         .get('donors/')
         .then((res) => {
 
-          setData(res.data);
+          setData(res.data['results']);
           console.log(res.data)
   
       })

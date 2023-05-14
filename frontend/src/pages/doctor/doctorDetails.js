@@ -1,37 +1,36 @@
 import { Typography, Button } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
 import { Box, Container } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axios';
 import { useNavigate } from "react-router-dom";
+import { DataGrid } from '@mui/x-data-grid';
 
-const DonorDetails = () => {
+const DoctorDetails = () => {
 
     const navigate = useNavigate();
 
-    const donorID = useParams().donorId;
+    const doctorID = useParams().doctorId;
     const [details, setDetails] = useState({
         name: "",
-        phone: "",
-        email: "",
-        birthday: "",
-        citizenship: "",
-        doctors:{},
+        title: "",
+        salary: "",
+        hospital: "",
+        university_gpa: "",
+        donors:{},
     });
 
     const [rows, setRows] = useState([]);
 
-    const LoadDonor = () => {
+    const LoadDoctor = () => {
         axiosInstance
-            .get('/donors/' + donorID)
+            .get('/doctors/' + doctorID)
             .then((res) => {
-                console.log(res.data)
-                res.data.doctors = res.data.doctors.map((item, index) => ({ id: index, name: item.name }));
-                console.log(res.data)
+                console.log(res)
+                res.data.donors = res.data.donors.map((item, index) => ({ id: index, name: item.name }));
+                console.log(res)
                 setDetails(res.data);
-                setRows(res.data.doctors)
-
+                setRows(res.data.donors)
             })
             .catch((err) => {
                 navigate('/404')
@@ -41,7 +40,7 @@ const DonorDetails = () => {
     };
 
     useEffect(() => {
-        LoadDonor();
+        LoadDoctor();
         // eslint-disable-next-line
     }, []);
 
@@ -65,28 +64,22 @@ const DonorDetails = () => {
 
             <Box component="div" align="center" sx={{ m: 3 }}>
                     <Typography>
-                    Phone: {details.phone}
+                    Title: {details.title}
                     </Typography>
 
                     <Typography>
-                    Email Address: {details.email}
+                    Salary: {details.salary}
                     </Typography>
 
                     <Typography>
-                    Birth Date: {details.birthday}
+                    Clinic: {details.hospital.name}
                     </Typography>
 
                     <Typography>
-                    Citizenship: {details.citizenship}
+                    University GPA: {details.university_gpa}
                     </Typography>
-
 
             </Box>
-            <DataGrid sx={{ height: '400px' , width: '50%', marginLeft:'25%'}}
-            rows={rows}
-            columns={columns}
-            hideFooter={true}
-          />
 
 
             <Box component="div" align="center">
@@ -104,6 +97,12 @@ const DonorDetails = () => {
                 Delete
                 </Button>
             </Box>
+
+            <DataGrid sx={{ height: '400px' , width: '50%', marginLeft:'25%'}}
+            rows={rows}
+            columns={columns}
+            hideFooter={true}
+          />
             
             </Container>
         </>
@@ -111,4 +110,4 @@ const DonorDetails = () => {
 
   };
   
-  export default DonorDetails;
+  export default DoctorDetails;

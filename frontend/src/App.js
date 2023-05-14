@@ -4,12 +4,25 @@ import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import Page404 from "./pages/Page404";
 import Donors from "./pages/donor/Donors";
-import AddTrip from './pages/donor/AddDonor';
+import AddDonor from './pages/donor/AddDonor';
 import EditDonor from './pages/donor/editDonor';
 import DonorDetails from './pages/donor/donorDetails';
 import DeleteDonorConfirmation from './pages/donor/DeleteDonor';
+import Doctors from './pages/doctor/Doctors';
+import AddDoctor from './pages/doctor/AddDoctor';
+import EditDoctor from './pages/doctor/editDoctor';
+import DeleteDoctorConfirmation from './pages/doctor/DeleteDoctor';
+import DoctorDetails from './pages/doctor/doctorDetails';
 import Reports from './pages/reports/reports';
 import NumberOfDoctors from './pages/reports/numberOfDoctors';
+import Clinics from './pages/clinic/Clinics';
+import AddClinic from './pages/clinic/AddClinic';
+import ClinicDetails from './pages/clinic/clinicDetails';
+import EditClinic from './pages/clinic/editClinic';
+import DeleteClinicConfirmation from './pages/clinic/DeleteClinic';
+import BloodBags from './pages/bloodbags/BloodBags';
+import BloodBagDetails from './pages/bloodbags/bloodbagDetails';
+
 
 function App() {  
   return (
@@ -20,7 +33,7 @@ function App() {
       <Route index element={<Home />} />
 
       <Route path="donors/">
-        <Route path="add/" element={<AddTrip />} />
+        <Route path="add/" element={<AddDonor />} />
         <Route path=":donorId/" element={<DonorDetails />} />
         <Route path=":donorId/edit/" element={<EditDonor />} />
         <Route path=":donorId/delete/" element={<DeleteDonorConfirmation />} />
@@ -28,9 +41,35 @@ function App() {
 
       </Route>
 
+      <Route path="doctors/">
+        <Route path="add/" element={<AddDoctor />} />
+        <Route path=":doctorId/" element={<DoctorDetails />} />
+        <Route path=":doctorId/edit/" element={<EditDoctor />} />
+        <Route path=":doctorId/delete/" element={<DeleteDoctorConfirmation />} />
+      <Route index element={<Doctors />}/>
+
+      </Route>
+
+      <Route path='clinics/'>
+      <Route path="add/" element={<AddClinic />} />
+      <Route path=":clinicId/" element={<ClinicDetails />} />
+      <Route path=":clinicId/edit/" element={<EditClinic />} />
+      <Route path=":clinicId/delete/" element={<DeleteClinicConfirmation />} />
+
+      <Route index element={<Clinics />}/>
+      </Route>
+
+      <Route path='bloodbags/'>
+      <Route path=":bloodbagId/" element={<BloodBagDetails />} />
+
+      <Route index element={<BloodBags/>}></Route>
+
+      </Route>
+
       <Route path='reports/'>
         <Route index element={<Reports />}/>
         <Route path="number-of-doctors-in-clinics/" element={<NumberOfDoctors />} />
+        
 
 
       </Route>

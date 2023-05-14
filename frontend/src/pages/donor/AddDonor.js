@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
 
 
-const AddTrip = () => {
+const AddDonor = () => {
 
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
@@ -50,7 +50,7 @@ const AddTrip = () => {
         <Container maxWidth="xl" sx={{ height: '100%' }}>
 
         <Typography variant="h3" align="center" sx={{ m: 2 }}>
-          Add Trip
+          Add Donor
         </Typography>
   
         <form onSubmit={handleSubmit} onReset={handleReset}>
@@ -84,4 +84,4 @@ const AddTrip = () => {
     </>
     )
   }; 
-  export default AddTrip;
+  export default AddDonor;

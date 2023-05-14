@@ -26,10 +26,25 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
                 self.fields.pop(field_name)
 
 
+class DoctorSerializerAggregated(DynamicFieldsModelSerializer):
+    total_donors = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Doctor
+        fields = ['id', 'name', 'title', 'salary', 'university_gpa', 'hospital', 'total_donors']
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=Doctor.objects.all(),
+        #         fields=['name', 'title', 'hospital']
+        #     )
+        # ]
+        depth = 0
+
+
 class DoctorSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Doctor
-        fields = "__all__"
+        fields = ['id', 'name', 'title', 'salary', 'university_gpa', 'hospital']
         validators = [
             UniqueTogetherValidator(
                 queryset=Doctor.objects.all(),
@@ -57,11 +72,10 @@ class DoctorSerializerDetails(serializers.ModelSerializer):
         model = Doctor
         fields = ['name', 'title', 'salary', 'hospital', 'university_gpa', 'donors']
         read_only_fields = ['hospital']
+        depth = 1
 
     def update(self, instance, validated_data):
         data = self.context["request"].data
-        # print(data)
-        # print(validated_data)
         if "hospital" in data.keys():
             hospital_field = data['hospital']
             if type(hospital_field) == int:
@@ -96,12 +110,55 @@ class DonorSerializer(serializers.ModelSerializer):
                 fields=['name', 'birthday']
             )
         ]
+        depth = 1
+
+
+class DonorSerializerAggregated(serializers.ModelSerializer):
+    nr_doctors = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Donor
+        fields = "__all__"
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Donor.objects.all(),
+                fields=['name', 'birthday']
+            )
+        ]
 
 
 class BloodBagSerializer(serializers.ModelSerializer):
     class Meta:
         model = BloodBag
         fields = "__all__"
+
+
+class DoctorTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ['id', 'name']
+
+
+class DonorTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Donor
+        fields = ['id', 'name']
+
+
+class DoctorsDonorTestSerializer(serializers.ModelSerializer):
+    donor=DonorTestSerializer()
+    doctor=DoctorTestSerializer()
+    class Meta:
+        model = DoctorsDonors
+        fields=['doctor', 'donor', 'id']
+
+
+class BloodBagSerializerDetails(serializers.ModelSerializer):
+    source=DoctorsDonorTestSerializer()
+    class Meta:
+        model = BloodBag
+        fields = "__all__"
+        depth = 2
 
 
 class DonorsOfDoctorSerializer(serializers.ModelSerializer):
@@ -123,6 +180,7 @@ class DoctorsDonorsSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorsDonors
         fields = "__all__"
+
 
 class DoctorSerializerReport(DynamicFieldsModelSerializer):
     avg_collected_blood = serializers.IntegerField(
@@ -151,3 +209,9 @@ class DonorSerializerReport(DynamicFieldsModelSerializer):
     class Meta:
         model = Donor
         fields = "__all__"
+
+
+class ClinicSerializerAutoComplete(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Clinic
+        fields = ['name', 'id']

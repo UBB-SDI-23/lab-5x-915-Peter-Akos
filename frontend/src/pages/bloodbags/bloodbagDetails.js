@@ -1,37 +1,34 @@
 import { Typography, Button } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
 import { Box, Container } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axios';
 import { useNavigate } from "react-router-dom";
 
-const DonorDetails = () => {
+const BloodBagDetails = () => {
 
     const navigate = useNavigate();
 
-    const donorID = useParams().donorId;
+    const bloodbagID = useParams().bloodbagId;
     const [details, setDetails] = useState({
-        name: "",
-        phone: "",
-        email: "",
-        birthday: "",
-        citizenship: "",
-        doctors:{},
+        source:{
+            donor:{
+                name:""
+            },
+            doctor:{
+                name:""
+            }
+        },
+        quantity: "",
+        date: "",
     });
 
-    const [rows, setRows] = useState([]);
-
-    const LoadDonor = () => {
+    const LoadBloodBag = () => {
         axiosInstance
-            .get('/donors/' + donorID)
+            .get('/bloodbags/' + bloodbagID)
             .then((res) => {
-                console.log(res.data)
-                res.data.doctors = res.data.doctors.map((item, index) => ({ id: index, name: item.name }));
-                console.log(res.data)
+                console.log(res)
                 setDetails(res.data);
-                setRows(res.data.doctors)
-
             })
             .catch((err) => {
                 navigate('/404')
@@ -41,14 +38,9 @@ const DonorDetails = () => {
     };
 
     useEffect(() => {
-        LoadDonor();
+        LoadBloodBag();
         // eslint-disable-next-line
     }, []);
-
-    const columns = [
-        { field: 'id', headerName: 'Number', width: 100 },
-        { field: 'name', headerName: 'Name', width: 300}
-      ];
 
     return (
         <>
@@ -57,7 +49,7 @@ const DonorDetails = () => {
             <Box component="div" sx={{ display: 'block' }}>
                 <Box component="div" sx={{ m: 2 }}>
                     <Typography variant="h4" align="center">
-                    {details.name}
+                    Bloodbag #{bloodbagID}
                     </Typography>
                 </Box>
 
@@ -65,28 +57,22 @@ const DonorDetails = () => {
 
             <Box component="div" align="center" sx={{ m: 3 }}>
                     <Typography>
-                    Phone: {details.phone}
+                    Donor Name: {details.source.donor.name}
                     </Typography>
 
                     <Typography>
-                    Email Address: {details.email}
+                    Doctor Name: {details.source.doctor.name}
                     </Typography>
 
                     <Typography>
-                    Birth Date: {details.birthday}
+                    Quantity: {details.quantity}
                     </Typography>
 
                     <Typography>
-                    Citizenship: {details.citizenship}
+                    Date: {details.date}
                     </Typography>
-
 
             </Box>
-            <DataGrid sx={{ height: '400px' , width: '50%', marginLeft:'25%'}}
-            rows={rows}
-            columns={columns}
-            hideFooter={true}
-          />
 
 
             <Box component="div" align="center">
@@ -111,4 +97,4 @@ const DonorDetails = () => {
 
   };
   
-  export default DonorDetails;
+  export default BloodBagDetails;

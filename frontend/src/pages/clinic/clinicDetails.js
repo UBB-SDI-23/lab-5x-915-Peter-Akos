@@ -1,37 +1,29 @@
 import { Typography, Button } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
 import { Box, Container } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axios';
 import { useNavigate } from "react-router-dom";
 
-const DonorDetails = () => {
+const ClinicDetails = () => {
 
     const navigate = useNavigate();
 
-    const donorID = useParams().donorId;
+    const clinicID = useParams().clinicId;
     const [details, setDetails] = useState({
         name: "",
-        phone: "",
-        email: "",
-        birthday: "",
-        citizenship: "",
-        doctors:{},
+        description: "",
+        address: "",
+        beds: "",
+        nrRooms: "",
     });
 
-    const [rows, setRows] = useState([]);
-
-    const LoadDonor = () => {
+    const LoadClinic = () => {
         axiosInstance
-            .get('/donors/' + donorID)
+            .get('/clinics/' + clinicID)
             .then((res) => {
-                console.log(res.data)
-                res.data.doctors = res.data.doctors.map((item, index) => ({ id: index, name: item.name }));
-                console.log(res.data)
+                console.log(res)
                 setDetails(res.data);
-                setRows(res.data.doctors)
-
             })
             .catch((err) => {
                 navigate('/404')
@@ -41,14 +33,9 @@ const DonorDetails = () => {
     };
 
     useEffect(() => {
-        LoadDonor();
+        LoadClinic();
         // eslint-disable-next-line
     }, []);
-
-    const columns = [
-        { field: 'id', headerName: 'Number', width: 100 },
-        { field: 'name', headerName: 'Name', width: 300}
-      ];
 
     return (
         <>
@@ -65,28 +52,22 @@ const DonorDetails = () => {
 
             <Box component="div" align="center" sx={{ m: 3 }}>
                     <Typography>
-                    Phone: {details.phone}
+                    Description: {details.description}
                     </Typography>
 
                     <Typography>
-                    Email Address: {details.email}
+                    Address: {details.address}
                     </Typography>
 
                     <Typography>
-                    Birth Date: {details.birthday}
+                    Number of Beds: {details.beds}
                     </Typography>
 
                     <Typography>
-                    Citizenship: {details.citizenship}
+                    Number of Rooms: {details.nrRooms}
                     </Typography>
-
 
             </Box>
-            <DataGrid sx={{ height: '400px' , width: '50%', marginLeft:'25%'}}
-            rows={rows}
-            columns={columns}
-            hideFooter={true}
-          />
 
 
             <Box component="div" align="center">
@@ -111,4 +92,4 @@ const DonorDetails = () => {
 
   };
   
-  export default DonorDetails;
+  export default ClinicDetails;

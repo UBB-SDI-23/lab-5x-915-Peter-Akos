@@ -5,10 +5,10 @@ import Container from '@mui/material/Container';
 import { Typography, Button, MenuItem, InputLabel, FormControl, Select} from '@mui/material';
 import { Link, useNavigate } from "react-router-dom";
 import {Pagination} from '@mui/material';
-import './donors.css'
+import './clinics.css'
 
 
-const Donors = () => {
+const Clinics = () => {
 
     const navigate = useNavigate();
   
@@ -29,7 +29,7 @@ const Donors = () => {
       const InitializeCount = (() => {
 
         axiosInstance
-            .get('donors/count')
+            .get('clinics/count')
             .then((res) => {
     
               setCount(res.data['count']);
@@ -56,11 +56,10 @@ const Donors = () => {
         <Link to={`${params.id}/`} className='details-link'>{params.value}</Link>
         )
         },
-      { field: 'phone', headerName: 'Phone Number', width: 150 },
-      { field: 'email', headerName: 'Email Address', width: 300 },
-      { field: 'birthday', headerName: 'Birth Date', width: 150 },
-      { field: 'citizenship', headerName: 'Citizenship', width: 150 },
-      { field: 'nr_doctors', headerName: 'Number of doctors', width: 200 },
+      { field: 'description', headerName: 'Description', width: 300 },
+      { field: 'address', headerName: 'Address', width: 300 },
+      { field: 'beds', headerName: 'Number of beds', width: 150 },
+      { field: 'nrRooms', headerName: 'Number of rooms', width: 150 },
       { field: 'actions', headerName: '', sortable: false, width: 200, renderCell: (params) => {
         return (
           <>
@@ -83,15 +82,12 @@ const Donors = () => {
     ];
     
   
-    
-  
     useEffect(() => {
       const LoadDonors = (() => {
 
         axiosInstance
-            .get('donors/?page_number=' + String(pageNumber - 1) + '&page_size=' + String(pageSize))
+            .get('clinics/?page_number=' + String(pageNumber - 1) + '&page_size=' + String(pageSize))
             .then((res) => {
-    
               setData(res.data);
               console.log(res.data)
       
@@ -118,7 +114,7 @@ const Donors = () => {
         <Container maxWidth="xl" sx={{ height: '100%'}}>
           
           <Typography variant="h3" align="center" sx={{ m: 5 }} >
-            Donors
+            Clinics
           </Typography>
 
           <Button style={{
@@ -127,10 +123,10 @@ const Donors = () => {
             padding: "18px 36px",
             fontSize: "18px"
             }} variant="contained" size="large" className="donors-add-button">
-          <Link to="/donors/add/" className='add-link'>+ Add Donor</Link>
-          </Button>
+          <Link to="/clinics/add/" className='add-link'>+ Add Clinic</Link>
+            </Button>
 
-          <FormControl>
+            <FormControl>
             <InputLabel id="page-size-label">Page Size</InputLabel>
             <Select
               labelId="page-size-label"
@@ -174,4 +170,4 @@ const Donors = () => {
     )
   };
     
-    export default Donors;
+    export default Clinics;

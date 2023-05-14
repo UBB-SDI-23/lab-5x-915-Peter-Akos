@@ -5,10 +5,10 @@ import Container from '@mui/material/Container';
 import { Typography, Button, MenuItem, InputLabel, FormControl, Select} from '@mui/material';
 import { Link, useNavigate } from "react-router-dom";
 import {Pagination} from '@mui/material';
-import './donors.css'
+import './bloodbags.css'
 
 
-const Donors = () => {
+const BloodBags = () => {
 
     const navigate = useNavigate();
   
@@ -29,7 +29,7 @@ const Donors = () => {
       const InitializeCount = (() => {
 
         axiosInstance
-            .get('donors/count')
+            .get('bloodbags/count')
             .then((res) => {
     
               setCount(res.data['count']);
@@ -50,17 +50,15 @@ const Donors = () => {
 
 
     const columns = [
-      { field: 'id', headerName: 'ID', width: 100 },
-      { field: 'name', headerName: 'Name', width: 300,
+      { field: 'id', headerName: 'ID', width: 100},
+      { field: 'source', headerName: 'Source', width: 200,
       renderCell: (params) => (
         <Link to={`${params.id}/`} className='details-link'>{params.value}</Link>
-        )
-        },
-      { field: 'phone', headerName: 'Phone Number', width: 150 },
-      { field: 'email', headerName: 'Email Address', width: 300 },
-      { field: 'birthday', headerName: 'Birth Date', width: 150 },
-      { field: 'citizenship', headerName: 'Citizenship', width: 150 },
-      { field: 'nr_doctors', headerName: 'Number of doctors', width: 200 },
+        ) },
+      { field: 'donorName', headerName: 'Donor Name', width: 200},
+      { field: 'doctorName', headerName: 'Doctor Name', width: 200},
+      { field: 'quantity', headerName: 'Quantity', width: 300 },
+      { field: 'date', headerName: 'Date', width: 300 },
       { field: 'actions', headerName: '', sortable: false, width: 200, renderCell: (params) => {
         return (
           <>
@@ -83,16 +81,19 @@ const Donors = () => {
     ];
     
   
-    
-  
     useEffect(() => {
       const LoadDonors = (() => {
 
         axiosInstance
-            .get('donors/?page_number=' + String(pageNumber - 1) + '&page_size=' + String(pageSize))
+            .get('bloodbags/?page_number=' + String(pageNumber - 1) + '&page_size=' + String(pageSize))
             .then((res) => {
-    
               setData(res.data);
+              console.log(res.data)
+              for (let i = 0; i < res.data.length; i++) {
+                res.data[i].donorName = res.data[i].source.donor.name
+                res.data[i].doctorName = res.data[i].source.doctor.name
+                res.data[i].source = res.data[i].source.id
+              }
               console.log(res.data)
       
           })
@@ -118,7 +119,7 @@ const Donors = () => {
         <Container maxWidth="xl" sx={{ height: '100%'}}>
           
           <Typography variant="h3" align="center" sx={{ m: 5 }} >
-            Donors
+            BloodBags
           </Typography>
 
           <Button style={{
@@ -127,10 +128,10 @@ const Donors = () => {
             padding: "18px 36px",
             fontSize: "18px"
             }} variant="contained" size="large" className="donors-add-button">
-          <Link to="/donors/add/" className='add-link'>+ Add Donor</Link>
-          </Button>
+          <Link to="/bloodbags/add/" className='add-link'>+ Add BloodBag</Link>
+            </Button>
 
-          <FormControl>
+            <FormControl>
             <InputLabel id="page-size-label">Page Size</InputLabel>
             <Select
               labelId="page-size-label"
@@ -155,6 +156,7 @@ const Donors = () => {
               columns: {
                 columnVisibilityModel: {
                   id: false,
+
                 },
               },
             }}
@@ -174,4 +176,4 @@ const Donors = () => {
     )
   };
     
-    export default Donors;
+    export default BloodBags;

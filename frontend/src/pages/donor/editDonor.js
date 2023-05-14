@@ -18,7 +18,7 @@ const EditDonor = () => {
 
     const LoadDonor = () => {
         axiosInstance
-            .get('/donors/' + donorId + '/')
+            .get('/donors/' + donorId)
             .then((res) => {
 
                 setName(res.data.name);
@@ -41,7 +41,7 @@ const EditDonor = () => {
         event.preventDefault();
         
         axiosInstance
-            .put('donors/' + donorId + '/', {
+            .put('donors/' + donorId, {
                 'name':name,
                 'phone':phone,
                 'email': email,

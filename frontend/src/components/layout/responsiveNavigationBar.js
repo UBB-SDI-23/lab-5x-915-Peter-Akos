@@ -14,6 +14,9 @@ import { Link } from "react-router-dom";
 
 const pages = [
   {'name': 'Donors', 'path': '/donors/'},
+  {'name': 'Doctors', 'path': '/doctors/'},
+  {'name': 'Clinics', 'path': '/clinics/'},
+  {'name': 'BloodBags', 'path': '/bloodbags/'},
   {'name': 'Reports', 'path': '/reports/'},
 ];
 

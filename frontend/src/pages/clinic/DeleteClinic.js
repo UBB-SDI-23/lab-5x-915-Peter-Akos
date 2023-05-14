@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axios';
 
-const DeleteDonorConfirmation = () => {
+const DeleteClinicConfirmation = () => {
 
     const [name, setName] = useState("");
-    const donorId = useParams().donorId;
+    const clinicId = useParams().clinicId;
     const navigate = useNavigate();
 
-    const LoadDonorName = () => {
+    const LoadClinicName = () => {
         axiosInstance
-            .get('/donors/' + donorId)
+            .get('/clinics/' + clinicId)
             .then((res) => {
                 setName(res.data.name);
             })
@@ -22,17 +22,17 @@ const DeleteDonorConfirmation = () => {
     };
 
     useEffect(() => {
-        LoadDonorName();
+        LoadClinicName();
     });
 
-    const DeleteDonor = (event) => {
+    const DeleteClinic = (event) => {
         event.stopPropagation();
     
         axiosInstance
-          .delete('donors/' + donorId)
+          .delete('clinics/' + clinicId)
           .then((res) => {
             
-            navigate('/donors/');
+            navigate('/clinics/');
     
           })
           .catch((err) => {
@@ -47,13 +47,13 @@ const DeleteDonorConfirmation = () => {
         <Container maxWidth="xl" sx={{ height: '100%' }}>
         
         <Typography variant="h4" align="center" sx={{ m: 2 }}>
-          Are you sure that you want to delete Donor {name}?
+          Are you sure that you want to delete Clinic {name}?
         </Typography>
 
         <Box component="div" align="center">
                 <Button
                     variant="contained"
-                    onClick={DeleteDonor}
+                    onClick={DeleteClinic}
                     sx={{bgcolor: '#8b0000', ":hover": {bgcolor: '#9b0000'}}}
                 >
                 Yes
@@ -71,4 +71,4 @@ const DeleteDonorConfirmation = () => {
     )
   };
   
-  export default DeleteDonorConfirmation;
+  export default DeleteClinicConfirmation;

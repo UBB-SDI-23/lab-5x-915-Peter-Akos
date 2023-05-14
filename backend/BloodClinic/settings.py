@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'drf_yasg',
     'corsheaders',
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'BloodClinic.urls'
@@ -81,10 +83,6 @@ WSGI_APPLICATION = 'BloodClinic.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'db',
@@ -144,7 +142,11 @@ CORS_ORIGIN_WHITELIST = (
     'https://80.97.241.66',
 )
 
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 20
+# }
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

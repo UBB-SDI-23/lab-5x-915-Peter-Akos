@@ -51,7 +51,8 @@ const BloodBags = () => {
 
     const columns = [
       { field: 'id', headerName: 'ID', width: 100},
-      { field: 'source', headerName: 'Source', width: 200,
+      { field: 'source', headerName: 'Source', width: 200},
+      { field: 'toDisplay', headerName: 'Donor and Doctor', width: 400,
       renderCell: (params) => (
         <Link to={`${params.id}/`} className='details-link'>{params.value}</Link>
         ) },
@@ -87,13 +88,14 @@ const BloodBags = () => {
         axiosInstance
             .get('bloodbags/?page_number=' + String(pageNumber - 1) + '&page_size=' + String(pageSize))
             .then((res) => {
-              setData(res.data);
               console.log(res.data)
               for (let i = 0; i < res.data.length; i++) {
                 res.data[i].donorName = res.data[i].source.donor.name
                 res.data[i].doctorName = res.data[i].source.doctor.name
                 res.data[i].source = res.data[i].source.id
+                res.data[i].toDisplay = "Donor: " + res.data[i].donorName + " Doctor: " + res.data[i].doctorName
               }
+              setData(res.data);
               console.log(res.data)
       
           })
@@ -155,7 +157,10 @@ const BloodBags = () => {
               },
               columns: {
                 columnVisibilityModel: {
-                  id: false,
+                  source: false,
+                  donorName:false,
+                  id:false,
+                  doctorName:false,
 
                 },
               },

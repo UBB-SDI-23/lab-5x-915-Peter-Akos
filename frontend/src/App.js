@@ -22,6 +22,9 @@ import EditClinic from './pages/clinic/editClinic';
 import DeleteClinicConfirmation from './pages/clinic/DeleteClinic';
 import BloodBags from './pages/bloodbags/BloodBags';
 import BloodBagDetails from './pages/bloodbags/bloodbagDetails';
+import AddBloodBag from './pages/bloodbags/AddBloodBag';
+import DeleteBloodBagConfirmation from './pages/bloodbags/DeleteBloodBag';
+import EditBloodBag from './pages/bloodbags/editBloodBag';
 
 
 function App() {  
@@ -60,7 +63,10 @@ function App() {
       </Route>
 
       <Route path='bloodbags/'>
+      <Route path="add/" element={<AddBloodBag />} />
       <Route path=":bloodbagId/" element={<BloodBagDetails />} />
+      <Route path=":bloodbagId/delete/" element={<DeleteBloodBagConfirmation />} />
+      <Route path=":bloodbagId/edit/" element={<EditBloodBag />} />
 
       <Route index element={<BloodBags/>}></Route>
 

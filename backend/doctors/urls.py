@@ -3,10 +3,12 @@ from django.urls import path
 from doctors.Views.BloodBagViews import ListCreateBloodBagView, RetrieveUpdateDestroyBloodBagView, BloodBagCount
 from doctors.Views.ClinicViews import ListCreateClinicView, RetrieveUpdateDestroyClinicView, ClinicAutoCompleteView, \
     ClinicCount
-from doctors.Views.DoctorViews import ListCreateDoctorView, RetrieveUpdateDestroyDoctorView, DoctorCount
+from doctors.Views.DoctorViews import ListCreateDoctorView, RetrieveUpdateDestroyDoctorView, DoctorCount, \
+    DoctorAutoCompleteView
 from doctors.Views.DoctorsDonorsViews import ListCreateDonorsofDoctorView, ListCreateDoctorsDonorsView, \
     RetrieveUpdateDestroyDoctorsDonorsView
-from doctors.Views.DonorViews import ListCreateDonorView, RetrieveUpdateDestroyDonorView, DonorCount
+from doctors.Views.DonorViews import ListCreateDonorView, RetrieveUpdateDestroyDonorView, DonorCount, \
+    DonorAutoCompleteView
 from doctors.Views.Reports import ClinicReport, DoctorBloodBagReport, DonorReport
 from doctors.Views.Utils import schema_view
 
@@ -15,6 +17,7 @@ urlpatterns = [
     path('doctors/<int:pk>', RetrieveUpdateDestroyDoctorView.as_view()),
     path('doctors/<int:doctor>/donors', ListCreateDonorsofDoctorView.as_view()),
     path('doctors/count', DoctorCount.as_view()),
+    path('doctors/autocomplete', DoctorAutoCompleteView.as_view()),
     path('clinics/', ListCreateClinicView.as_view()),
     path('clinics/autocomplete', ClinicAutoCompleteView.as_view()),
     path('clinics/nr-doctors-report', ClinicReport.as_view()),
@@ -25,6 +28,7 @@ urlpatterns = [
     path('donors/<int:pk>', RetrieveUpdateDestroyDonorView.as_view()),
     path('donors/report', DonorReport.as_view()),
     path('donors/count', DonorCount.as_view()),
+    path('donors/autocomplete', DonorAutoCompleteView.as_view()),
     path('bloodbags/', ListCreateBloodBagView.as_view()),
     path('bloodbags/<int:pk>', RetrieveUpdateDestroyBloodBagView.as_view()),
     path('bloodbags/count', BloodBagCount.as_view()),

@@ -3,7 +3,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.views import APIView
 
 from doctors.models import Doctor
-from doctors.serializers import DoctorSerializer, DoctorSerializerDetails, DoctorSerializerAggregated
+from doctors.serializers import DoctorSerializer, DoctorSerializerDetails, DoctorSerializerAggregated, \
+    DoctorNameIdSerializer
 from rest_framework.response import Response
 
 
@@ -48,4 +49,14 @@ class DoctorCount(APIView):
     def get(self, request):
         count = Doctor.objects.all().count()
         print(count)
-        return Response({'count':count})
+        return Response({'count': count})
+
+
+class DoctorAutoCompleteView(ListCreateAPIView):
+    queryset = Doctor.objects.all()
+    serializer_class = DoctorNameIdSerializer
+
+    def get_queryset(self):
+        query_string = self.request.query_params.get('query')
+        queryset = Doctor.objects.all().filter(name__startswith=query_string)
+        return queryset[:20]

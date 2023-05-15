@@ -49,7 +49,7 @@ const BloodBagDetails = () => {
             <Box component="div" sx={{ display: 'block' }}>
                 <Box component="div" sx={{ m: 2 }}>
                     <Typography variant="h4" align="center">
-                    Bloodbag #{bloodbagID}
+                    Bloodbag
                     </Typography>
                 </Box>
 

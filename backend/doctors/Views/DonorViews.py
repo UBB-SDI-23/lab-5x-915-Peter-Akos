@@ -3,9 +3,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.views import APIView
 
 from doctors.models import Donor
-from doctors.serializers import DonorSerializer, DonorSerializerAggregated
+from doctors.serializers import DonorSerializer, DonorSerializerAggregated, DonorNameIdSerializer
 from rest_framework.response import Response
-
 
 
 class ListCreateDonorView(ListCreateAPIView):
@@ -40,10 +39,18 @@ class RetrieveUpdateDestroyDonorView(RetrieveUpdateDestroyAPIView):
     serializer_class = DonorSerializer
 
 
+class DonorAutoCompleteView(ListCreateAPIView):
+    queryset = Donor.objects.all()
+    serializer_class = DonorNameIdSerializer
+
+    def get_queryset(self):
+        query_string = self.request.query_params.get('query')
+        queryset = Donor.objects.all().filter(name__startswith=query_string)
+        return queryset[:20]
+
 
 class DonorCount(APIView):
     def get(self, request):
         count = Donor.objects.all().count()
         print(count)
-        return Response({'count':count})
-
+        return Response({'count': count})

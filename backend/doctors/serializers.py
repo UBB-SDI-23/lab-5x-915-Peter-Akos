@@ -133,21 +133,21 @@ class BloodBagSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class DoctorTestSerializer(serializers.ModelSerializer):
+class DoctorNameIdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         fields = ['id', 'name']
 
 
-class DonorTestSerializer(serializers.ModelSerializer):
+class DonorNameIdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Donor
         fields = ['id', 'name']
 
 
 class DoctorsDonorTestSerializer(serializers.ModelSerializer):
-    donor=DonorTestSerializer()
-    doctor=DoctorTestSerializer()
+    donor=DonorNameIdSerializer()
+    doctor=DoctorNameIdSerializer()
     class Meta:
         model = DoctorsDonors
         fields=['doctor', 'donor', 'id']
@@ -159,6 +159,40 @@ class BloodBagSerializerDetails(serializers.ModelSerializer):
         model = BloodBag
         fields = "__all__"
         depth = 2
+
+    def create(self, validated_data):
+        donor_id = validated_data['source']['donor']['name']
+        doctor_id = validated_data['source']['doctor']['name']
+        try:
+            lookup = DoctorsDonors.objects.get(donor_id=donor_id, doctor_id=doctor_id)
+        except:
+            print("does not exit")
+            lookup = DoctorsDonors(doctor_id=doctor_id, donor_id=donor_id)
+            lookup.save()
+        res = BloodBag(source_id=lookup.id, quantity=validated_data['quantity'], date=validated_data['date'])
+        res.save()
+        return res
+
+    def update(self, instance, validated_data):
+        print(validated_data)
+        print(instance)
+
+        donor_id = validated_data['source']['donor']['name']
+        doctor_id = validated_data['source']['doctor']['name']
+
+
+        try:
+            lookup = DoctorsDonors.objects.get(donor_id=donor_id, doctor_id=doctor_id)
+        except:
+            print("does not exit")
+            lookup = DoctorsDonors(doctor_id=doctor_id, donor_id=donor_id)
+            lookup.save()
+
+        instance.source_id = lookup.id
+        instance.date = validated_data['date']
+        instance.quantity = validated_data['quantity']
+        instance.save()
+        return instance
 
 
 class DonorsOfDoctorSerializer(serializers.ModelSerializer):
@@ -215,3 +249,5 @@ class ClinicSerializerAutoComplete(DynamicFieldsModelSerializer):
     class Meta:
         model = Clinic
         fields = ['name', 'id']
+
+

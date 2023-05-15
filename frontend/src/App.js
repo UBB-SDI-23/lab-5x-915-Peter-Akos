@@ -25,6 +25,7 @@ import BloodBagDetails from './pages/bloodbags/bloodbagDetails';
 import AddBloodBag from './pages/bloodbags/AddBloodBag';
 import DeleteBloodBagConfirmation from './pages/bloodbags/DeleteBloodBag';
 import EditBloodBag from './pages/bloodbags/editBloodBag';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {  

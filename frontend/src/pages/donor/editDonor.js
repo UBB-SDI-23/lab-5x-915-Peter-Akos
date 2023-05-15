@@ -2,6 +2,7 @@ import { Button, Container, Input, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const EditDonor = () => {
 
@@ -37,8 +38,42 @@ const EditDonor = () => {
         // eslint-disable-next-line
     }, []);
 
+    const validateFormData = () => {
+        const errorMessages = [];
+
+        function isValidEmail(email) {
+            return /\S+@\S+\.\S+/.test(email);
+          }
+
+        if (name == null || name.length === 0)
+        {
+            errorMessages.push({"field": "name", "detail": "Name is required."});
+        }
+
+        if (name.length > 60)
+        {
+            errorMessages.push({"field": "name", "detail": "Maxiumum allowed length is 60 characters."});
+        }
+
+        if (!isValidEmail(email))
+        {
+            errorMessages.push({"field": "email", "detail": "Email format is incorrect."});
+        }
+        
+
+        return errorMessages;
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        const errorMessages = validateFormData();
+
+        if (errorMessages.length > 0)
+        {
+            toast.error(errorMessages[0].detail);
+            return;
+        }
         
         axiosInstance
             .put('donors/' + donorId, {
@@ -52,7 +87,7 @@ const EditDonor = () => {
                 navigate('/donors/' + donorId + '/');
             })
             .catch((err) => {
-                alert(err);
+                toast.error(err);
             });
     };
 
@@ -100,7 +135,8 @@ const EditDonor = () => {
                 </Container>
             </Container>
         </form>
-
+        
+        <ToastContainer/>
         </Container>
         
     </>

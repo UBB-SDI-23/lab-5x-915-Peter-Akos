@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../axios'
 import { DataGrid } from '@mui/x-data-grid';
 import Container from '@mui/material/Container';
-import { Typography, Button, MenuItem, InputLabel, FormControl, Select} from '@mui/material';
+import { Typography, Button, MenuItem, InputLabel, FormControl, Select, Input} from '@mui/material';
 import { Link, useNavigate } from "react-router-dom";
 import {Pagination} from '@mui/material';
 import './clinics.css'
@@ -17,6 +17,8 @@ const Clinics = () => {
     const [pageNumber, setPageNumber] = useState(1);
 
     const [pageSize, setPageSize] = useState(25);
+
+    const [minBeds, setMinBeds] = useState(0);
 
     function handlePageSizeChange(event) {
       const value = parseInt(event.target.value, 10);
@@ -46,7 +48,7 @@ const Clinics = () => {
   
         InitializeCount();
 
-    }, []);
+    }, [minBeds]);
 
 
     const columns = [
@@ -86,7 +88,7 @@ const Clinics = () => {
       const LoadDonors = (() => {
 
         axiosInstance
-            .get('clinics/?page_number=' + String(pageNumber - 1) + '&page_size=' + String(pageSize))
+            .get('clinics/?page_number=' + String(pageNumber - 1) + '&page_size=' + String(pageSize)+ '&min_beds=' + String(minBeds))
             .then((res) => {
               setData(res.data);
               console.log(res.data)
@@ -102,7 +104,7 @@ const Clinics = () => {
   
       LoadDonors();
   
-    }, [pageNumber, pageSize]);
+    }, [pageNumber, pageSize, minBeds]);
 
     const handlePageChange = (_, value) => {
       console.log(String(value))
@@ -139,6 +141,9 @@ const Clinics = () => {
               <MenuItem value={100}>100</MenuItem>
             </Select>
           </FormControl>
+
+            <text>Minimum beds:   </text>
+            <Input type="text" name="description" value={minBeds} onChange={(e) => setMinBeds(e.target.value)} />
       
           
           <DataGrid sx={{ height: '700px' }}

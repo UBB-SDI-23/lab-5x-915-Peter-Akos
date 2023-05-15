@@ -2,6 +2,7 @@ import { Button, Container, Input, Typography, TextField,Autocomplete} from '@mu
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const AddBloodBag = () => {
@@ -49,9 +50,49 @@ const AddBloodBag = () => {
 
     const navigate = useNavigate();
 
+    const validateFormData = () => {
+        const errorMessages = [];
+
+        if (donor.name == null || donor.name.length === 0)
+        {
+            errorMessages.push({"field": "donor", "detail": "Donor is required."});
+        }
+
+        if (doctor.name == null || doctor.name.length === 0)
+        {
+            errorMessages.push({"field": "doctor", "detail": "Doctor is required."});
+        }
+
+        if (quantity > 450)
+        {
+            errorMessages.push({"field": "quantity", "detail": "Maxiumum allowed quantity is 450."});
+        }
+
+        var oldDate = new Date(date);
+        var todayDate = new Date();
+
+        if ((todayDate - oldDate) / (1000 * 3600 * 24 * 365) > 5)
+        {
+            errorMessages.push({"field": "date", "detail": "The date is over 5 year"});
+        }
+
+
+        
+
+        return errorMessages;
+    }
+
 
     const handleSubmit = (event) => {
         event.preventDefault();    
+
+        const errorMessages = validateFormData();
+
+        if (errorMessages.length > 0)
+        {
+            toast.error(errorMessages[0].detail);
+            return;
+        }
 
         axiosInstance
             .post('bloodbags/', {
@@ -139,6 +180,8 @@ const AddBloodBag = () => {
                 </Container>
             </Container>
         </form>
+        
+        <ToastContainer />
 
         </Container>
         

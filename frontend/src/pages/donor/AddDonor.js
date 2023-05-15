@@ -2,6 +2,7 @@ import { Button, Container, Input, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const AddDonor = () => {
@@ -14,9 +15,43 @@ const AddDonor = () => {
 
     const navigate = useNavigate();
 
+    const validateFormData = () => {
+        const errorMessages = [];
+
+        function isValidEmail(email) {
+            return /\S+@\S+\.\S+/.test(email);
+          }
+
+        if (name == null || name.length === 0)
+        {
+            errorMessages.push({"field": "name", "detail": "Name is required."});
+        }
+
+        if (name.length > 60)
+        {
+            errorMessages.push({"field": "name", "detail": "Maxiumum allowed length is 60 characters."});
+        }
+
+        if (!isValidEmail(email))
+        {
+            errorMessages.push({"field": "email", "detail": "Email format is incorrect."});
+        }
+        
+
+        return errorMessages;
+    }
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        const errorMessages = validateFormData();
+
+        if (errorMessages.length > 0)
+        {
+            toast.error(errorMessages[0].detail);
+            return;
+        }
         
         axiosInstance
             .post('donors/', {
@@ -31,7 +66,7 @@ const AddDonor = () => {
                 navigate("/donors/");
             })
             .catch((err) => {
-                console.log(err);
+                toast.error(err.response.data.detail);
             });
     };
 
@@ -56,7 +91,7 @@ const AddDonor = () => {
         <form onSubmit={handleSubmit} onReset={handleReset}>
             <Container maxWidth="md" >
                 <p>Name*</p>
-                <Input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} fullWidth required />
+                <Input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
 
                 <p>Phone number</p>
                 <Input type="text" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} fullWidth />
@@ -78,6 +113,8 @@ const AddDonor = () => {
                 </Container>
             </Container>
         </form>
+
+        <ToastContainer />
 
         </Container>
         

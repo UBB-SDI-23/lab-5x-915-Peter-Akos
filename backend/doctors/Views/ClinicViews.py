@@ -23,6 +23,11 @@ class ListCreateClinicView(ListCreateAPIView):
         else:
             page_size = int(page_size)
 
+        if min_beds is None:
+            min_beds = 0
+        else:
+            min_beds = int(min_beds)
+
         if page_number is None:
             page_number = 0
         else:

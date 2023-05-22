@@ -56,6 +56,11 @@ const Doctors = () => {
         <Link to={`${params.id}/`} className='details-link'>{params.value}</Link>
         )
         },
+      { field: 'createdBy', headerName: 'Created By', width: 300,
+    renderCell: (params) => (
+      <Link to={`../user/${params.value.id}/`} className='details-link'>{params.value.username}</Link>
+      )
+      },
       { field: 'title', headerName: 'Title', width: 150 },
       { field: 'salary', headerName: 'Salary', width: 150 },
       { field: 'hospital', headerName: 'Clinic', width: 150 },
@@ -91,6 +96,7 @@ const Doctors = () => {
             .then((res) => {
               setData(res.data);
               console.log(res.data)
+              console.log(res.data.createdBy)
       
           })
             .catch((err) => {

@@ -18,6 +18,10 @@ const pages = [
   {'name': 'Clinics', 'path': '/clinics/'},
   {'name': 'BloodBags', 'path': '/bloodbags/'},
   {'name': 'Reports', 'path': '/reports/'},
+  {'name': 'Log In', 'path': '/login/'},
+  {'name': 'Log Out', 'path': '/logout/'},
+  {'name': 'Profile', 'path': '/user/'},
+  {'name': 'Register', 'path': '/register/'},
 ];
 
 function ResponsiveNavigationBar() {

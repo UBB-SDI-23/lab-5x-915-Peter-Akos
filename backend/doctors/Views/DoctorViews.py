@@ -1,8 +1,8 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 
-from doctors.models import Doctor
+from doctors.models import Doctor, User
 from doctors.serializers import DoctorSerializer, DoctorSerializerDetails, DoctorSerializerAggregated, \
     DoctorNameIdSerializer
 from rest_framework.response import Response

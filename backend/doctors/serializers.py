@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from doctors.models import Doctor, Clinic, Donor, BloodBag, DoctorsDonors
+from doctors.models import Doctor, Clinic, Donor, BloodBag, DoctorsDonors, User, UserDetail
 from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+import re
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -26,19 +28,39 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
                 self.fields.pop(field_name)
 
 
+class UserNameIdSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'id']
+
+
+class UserDetailSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = UserDetail
+        fields = '__all__'
+
+
 class DoctorSerializerAggregated(DynamicFieldsModelSerializer):
     total_donors = serializers.IntegerField(required=False)
+    createdBy = UserNameIdSerializer(read_only=True)
 
     class Meta:
         model = Doctor
-        fields = ['id', 'name', 'title', 'salary', 'university_gpa', 'hospital', 'total_donors']
-        # validators = [
-        #     UniqueTogetherValidator(
-        #         queryset=Doctor.objects.all(),
-        #         fields=['name', 'title', 'hospital']
-        #     )
-        # ]
+        fields = ['id', 'name', 'title', 'salary', 'university_gpa', 'hospital', 'total_donors', 'createdBy']
         depth = 0
+
+    def validate(self, data):
+        if type(data["salary"]) is not int or data["salary"] < 0:
+            raise serializers.ValidationError({"error": "Doctor salary must be a positive integer"})
+        if type(data["university_gpa"]) is not int or data["university_gpa"] < 0:
+            raise serializers.ValidationError({"error": "Doctor university GPA must be a positive integer"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
+            raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["title"]):
+            raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z0-9 .,!?;:]*$", data["description"]):
+            raise serializers.ValidationError({"error": "Description can only contain numbers and letters"})
+        return data
 
 
 class DoctorSerializer(DynamicFieldsModelSerializer):
@@ -52,8 +74,20 @@ class DoctorSerializer(DynamicFieldsModelSerializer):
             )
         ]
 
+    def validate(self, data):
+        if type(data["salary"]) is not int or data["salary"] < 0:
+            raise serializers.ValidationError({"error": "Doctor salary must be a positive integer"})
+        if type(data["university_gpa"]) is not int or data["university_gpa"] < 0:
+            raise serializers.ValidationError({"error": "Doctor university GPA must be a positive integer"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
+            raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["title"]):
+            raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
+        return data
+
 
 class ClinicSerializer(serializers.ModelSerializer):
+    createdBy = UserNameIdSerializer(read_only=True)
     class Meta:
         model = Clinic
         fields = "__all__"
@@ -64,6 +98,19 @@ class ClinicSerializer(serializers.ModelSerializer):
             )
         ]
 
+    def validate(self, data):
+        if type(data["beds"]) is not int or data["beds"] < 0:
+            raise serializers.ValidationError({"error": "Doctor salary must be a positive integer"})
+        if type(data["nrRooms"]) is not int or data["nrRooms"] < 0:
+            raise serializers.ValidationError({"error": "Doctor university GPA must be a positive integer"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
+            raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["address"]):
+            raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["description"]):
+            raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
+        return data
+
 
 class DoctorSerializerDetails(serializers.ModelSerializer):
     hospital = ClinicSerializer(required=False, read_only=True)
@@ -73,6 +120,17 @@ class DoctorSerializerDetails(serializers.ModelSerializer):
         fields = ['name', 'title', 'salary', 'hospital', 'university_gpa', 'donors']
         read_only_fields = ['hospital']
         depth = 1
+
+    def validate(self, data):
+        if type(data["salary"]) is not int or data["salary"] < 0:
+            raise serializers.ValidationError({"error": "Doctor salary must be a positive integer"})
+        if type(data["university_gpa"]) is not int or data["university_gpa"] < 0:
+            raise serializers.ValidationError({"error": "Doctor university GPA must be a positive integer"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
+            raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["title"]):
+            raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
+        return data
 
     def update(self, instance, validated_data):
         data = self.context["request"].data
@@ -99,6 +157,19 @@ class ClinicSerializerDetails(serializers.ModelSerializer):
         depth = 1
         fields = ('name', 'description', 'address', 'beds', 'nrRooms', 'doctors')
 
+    def validate(self, data):
+        if type(data["beds"]) is not int or data["beds"] < 0:
+            raise serializers.ValidationError({"error": "Doctor salary must be a positive integer"})
+        if type(data["nrRooms"]) is not int or data["nrRooms"] < 0:
+            raise serializers.ValidationError({"error": "Doctor university GPA must be a positive integer"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
+            raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["address"]):
+            raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z0-9 ]*$", data["description"]):
+            raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
+        return data
+
 
 class DonorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -112,9 +183,19 @@ class DonorSerializer(serializers.ModelSerializer):
         ]
         depth = 1
 
+    def validate(self, data):
+        if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
+            raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
+        if not re.search("^[0-9 ]*$", data["phone"]):
+            raise serializers.ValidationError({"error": "Phone can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z ]*$", data["citizenship"]):
+            raise serializers.ValidationError({"error": "Citizenship can only contain letters"})
+        return data
+
 
 class DonorSerializerAggregated(serializers.ModelSerializer):
     nr_doctors = serializers.IntegerField(required=False)
+    createdBy = UserNameIdSerializer(read_only=True)
 
     class Meta:
         model = Donor
@@ -126,11 +207,27 @@ class DonorSerializerAggregated(serializers.ModelSerializer):
             )
         ]
 
+    def validate(self, data):
+        if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
+            raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
+        if not re.search("^[0-9 ]*$", data["phone"]):
+            raise serializers.ValidationError({"error": "Phone can only contain numbers and letters"})
+        if not re.search("^[a-zA-Z ]*$", data["citizenship"]):
+            raise serializers.ValidationError({"error": "Citizenship can only contain letters"})
+        return data
+
 
 class BloodBagSerializer(serializers.ModelSerializer):
     class Meta:
         model = BloodBag
         fields = "__all__"
+
+    def validate(self, data):
+        if type(data["donor"]) is not int or data["donor"] < 0:
+            raise serializers.ValidationError({"error": "Donor must be a positive integer"})
+        if type(data["doctor"]) is not int or data["doctor"] < 0:
+            raise serializers.ValidationError({"error": "Doctor must be a positive integer"})
+        return data
 
 
 class DoctorNameIdSerializer(serializers.ModelSerializer):
@@ -146,15 +243,17 @@ class DonorNameIdSerializer(serializers.ModelSerializer):
 
 
 class DoctorsDonorTestSerializer(serializers.ModelSerializer):
-    donor=DonorNameIdSerializer()
-    doctor=DoctorNameIdSerializer()
+    donor = DonorNameIdSerializer()
+    doctor = DoctorNameIdSerializer()
+
     class Meta:
         model = DoctorsDonors
-        fields=['doctor', 'donor', 'id']
+        fields = ['doctor', 'donor', 'id']
 
 
 class BloodBagSerializerDetails(serializers.ModelSerializer):
-    source=DoctorsDonorTestSerializer()
+    source = DoctorsDonorTestSerializer()
+
     class Meta:
         model = BloodBag
         fields = "__all__"
@@ -179,7 +278,6 @@ class BloodBagSerializerDetails(serializers.ModelSerializer):
 
         donor_id = validated_data['source']['donor']['name']
         doctor_id = validated_data['source']['doctor']['name']
-
 
         try:
             lookup = DoctorsDonors.objects.get(donor_id=donor_id, doctor_id=doctor_id)
@@ -251,3 +349,12 @@ class ClinicSerializerAutoComplete(DynamicFieldsModelSerializer):
         fields = ['name', 'id']
 
 
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['user_id'] = user.id
+        token['role'] = user.role
+
+        return token

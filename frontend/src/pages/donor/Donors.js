@@ -16,7 +16,7 @@ const Donors = () => {
 
     const [pageNumber, setPageNumber] = useState(1);
 
-    const [pageSize, setPageSize] = useState(25);
+    const [pageSize, setPageSize] = useState(localStorage.getItem('paginationValue') ? JSON.parse(localStorage.getItem('paginationValue')) : 25);
 
     function handlePageSizeChange(event) {
       const value = parseInt(event.target.value, 10);
@@ -56,6 +56,11 @@ const Donors = () => {
         <Link to={`${params.id}/`} className='details-link'>{params.value}</Link>
         )
         },
+      { field: 'createdBy', headerName: 'Created By', width: 300,
+    renderCell: (params) => (
+      <Link to={`../user/${params.value.id}/`} className='details-link'>{params.value.username}</Link>
+      )
+      },
       { field: 'phone', headerName: 'Phone Number', width: 150 },
       { field: 'email', headerName: 'Email Address', width: 300 },
       { field: 'birthday', headerName: 'Birth Date', width: 150 },

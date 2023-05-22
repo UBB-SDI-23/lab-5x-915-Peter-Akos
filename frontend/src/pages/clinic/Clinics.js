@@ -58,6 +58,11 @@ const Clinics = () => {
         <Link to={`${params.id}/`} className='details-link'>{params.value}</Link>
         )
         },
+      { field: 'createdBy', headerName: 'Created By', width: 300,
+      renderCell: (params) => (
+        <Link to={`../user/${params.value.id}/`} className='details-link'>{params.value.username}</Link>
+        )
+        },
       { field: 'description', headerName: 'Description', width: 300 },
       { field: 'address', headerName: 'Address', width: 300 },
       { field: 'beds', headerName: 'Number of beds', width: 150 },

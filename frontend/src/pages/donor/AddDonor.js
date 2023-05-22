@@ -62,11 +62,13 @@ const AddDonor = () => {
                 'citizenship': citizenship,
             })
             .then(() => {
-
                 navigate("/donors/");
             })
             .catch((err) => {
+                console.log(err)
+                console.log(err.response.data.error[0])
                 toast.error(err.response.data.detail);
+                toast.error(err.response.data.error[0]);
             });
     };
 

@@ -12,15 +12,15 @@ NR_OF_RECORDS = 1000000
 
 
 sql = 'INSERT INTO doctors_bloodbag(source_id, quantity, date) VALUES '
-f = open('insert_bloodbags.sql', 'w')
+f = open('insert_bloodbags_2.sql', 'w')
 f.write(sql)
 
 for i in tqdm(range(NR_OF_RECORDS)):
     if i == NR_OF_RECORDS-1:
-        s = "('" + str(random.randint(2556343, 10000000)) + "', '" + str(random.randint(200, 450)) + "', '" + str(fake.date_time_between(start_date='-2y', end_date='-1y'))[:10] + "');\n"
+        s = "('" + str(random.randint(1, 10000000)) + "', '" + str(random.randint(200, 450)) + "', '" + str(fake.date_time_between(start_date='-2y', end_date='-1y'))[:10] + "');\n"
         f.write(s)
     else:
-        s = "('" + str(random.randint(2556343, 10000000)) + "', '" + str(random.randint(200, 450)) + "', '" + str(fake.date_time_between(start_date='-2y', end_date='-1y'))[:10] + "'),\n"
+        s = "('" + str(random.randint(1, 10000000)) + "', '" + str(random.randint(200, 450)) + "', '" + str(fake.date_time_between(start_date='-2y', end_date='-1y'))[:10] + "'),\n"
         f.write(s)
 
 # f.write(";")

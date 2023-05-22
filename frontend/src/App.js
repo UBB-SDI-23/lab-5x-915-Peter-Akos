@@ -26,12 +26,19 @@ import AddBloodBag from './pages/bloodbags/AddBloodBag';
 import DeleteBloodBagConfirmation from './pages/bloodbags/DeleteBloodBag';
 import EditBloodBag from './pages/bloodbags/editBloodBag';
 import 'react-toastify/dist/ReactToastify.css';
-
+import LoginPage from './pages/login/Login';
+import { AuthProvider } from './Context/context';
+import LogoutPage from './Logout/logout';
+import UserPage from './pages/UserPage/userPage';
+import CurrentUserPage from './pages/UserPage/currentUserPage';
+import RegisterPage from './pages/Register/registerPage';
+import ActivationPage from './pages/Register/registerActivation';
 
 function App() {  
   return (
     <>
-  <BrowserRouter>
+    <AuthProvider>
+    <BrowserRouter>
   <Routes>
     <Route path="/" element={<Layout />}>
       <Route index element={<Home />} />
@@ -81,10 +88,34 @@ function App() {
 
       </Route>
 
+      <Route path="login/" >
+        <Route index element={<LoginPage />}/>
+      </Route>
+
+      <Route path="register/" >
+        <Route index element={<RegisterPage />}/>
+      </Route>
+
+      <Route path="activation/" >
+        <Route index element={<ActivationPage />}/>
+      </Route>
+
+      <Route path="logout/" >
+        <Route index element={<LogoutPage />}/>
+      </Route>
+
+      <Route path="user/" >
+        
+        <Route index element={<CurrentUserPage />}/>
+        <Route path=":bloodbagId/" element={<UserPage />} />
+      </Route>
+
       <Route path="*" element={<Page404 />} />
     </Route>
   </Routes>
   </BrowserRouter>
+    </AuthProvider>
+  
   </>
   );
 }

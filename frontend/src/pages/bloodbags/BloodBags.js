@@ -56,6 +56,11 @@ const BloodBags = () => {
       renderCell: (params) => (
         <Link to={`${params.id}/`} className='details-link'>{params.value}</Link>
         ) },
+        { field: 'createdBy', headerName: 'Created By', width: 300,
+        renderCell: (params) => (
+          <Link to={`../user/${params.value.id}/`} className='details-link'>{params.value.username}</Link>
+          )
+          },
       { field: 'donorName', headerName: 'Donor Name', width: 200},
       { field: 'doctorName', headerName: 'Doctor Name', width: 200},
       { field: 'quantity', headerName: 'Quantity', width: 300 },

@@ -4,7 +4,7 @@ import { Grid, TextField, InputLabel, Select, MenuItem, Container } from '@mui/m
 import authContext from '../../Context/context';
 import "./userPage.css"
 
-const URL_BASE = "http://localhost:8000/api/userdetails/";
+const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
 
 function CurrentUserPage(props) {
     const { user} = useContext(authContext);

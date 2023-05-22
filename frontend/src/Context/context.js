@@ -2,8 +2,8 @@ import { useState, useEffect, createContext } from "react";
 import jwt_decode from "jwt-decode";
 
 const authContext = createContext();
-const URL = "http://localhost:8000/api/token/";
-const URL_DETAIL = "http://localhost:8000/api/userdetails/";
+const URL = "https://bloodclinic.mooo.com/api/token/";
+const URL_DETAIL = "https://bloodclinic.mooo.com/userdetails/";
 // const URL = "https://SArnold-sdi-22-23.mooo.com/api/token/";
 // const URL_DETAIL = "https://SArnold-sdi-22-23.mooo.com/api/user/";
 

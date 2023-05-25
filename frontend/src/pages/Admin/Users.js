@@ -77,7 +77,7 @@ const Users = () => {
     });
   });
 
-  useEffect((LoadUsers) => {
+  useEffect(() => {
 
     LoadUsers();
 // eslint-disable-next-line

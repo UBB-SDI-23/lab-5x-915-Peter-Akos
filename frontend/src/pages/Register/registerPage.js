@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import authContext from '../../Context/context';
 import { ToastContainer, toast } from 'react-toastify';
 
-// const URL_BASE = "https://bloodclinic.mooo.com/api/register/";
-const URL_BASE = "http://localhost:8000/api/register/";
+const URL_BASE = "https://bloodclinic.mooo.com/api/register/";
+// const URL_BASE = "http://localhost:8000/api/register/";
 
 function RegisterPage() {
     let {user} = useContext(authContext);

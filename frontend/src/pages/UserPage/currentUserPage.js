@@ -7,8 +7,8 @@ import jwt_decode from "jwt-decode";
 import { ToastContainer, toast } from 'react-toastify';
 
 
-// const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
-const URL_BASE = "http://localhost:8000/api/userdetails/";
+const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
+// const URL_BASE = "http://localhost:8000/api/userdetails/";
 
 function CurrentUserPage(props) {
     const { user} = useContext(authContext);

@@ -5,8 +5,8 @@ import authContext from '../../Context/context';
 import { useParams } from 'react-router-dom';
 import "./userPage.css"
 
-// const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
-const URL_BASE = "http://localhost:8000/api/userdetails/";
+const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
+// const URL_BASE = "http://localhost:8000/api/userdetails/";
 
 function UserPage(props) {
     const userId = useParams().userId;

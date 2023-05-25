@@ -44,7 +44,7 @@ function CurrentUserPage(props) {
 
     let adminHandler = () => {
         console.log(jwt_decode(localStorage.getItem('access_token')).role)
-        if(jwt_decode(localStorage.getItem('access_token')).role == "Admin")
+        if(jwt_decode(localStorage.getItem('access_token')).role === "Admin")
         {
             navigate("admin/");
         }

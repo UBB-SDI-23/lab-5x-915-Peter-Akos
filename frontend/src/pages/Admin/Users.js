@@ -33,30 +33,31 @@ const Users = () => {
     },
   ];
 
-  function handleDropDownChange(elso, value, alma) {
-    console.log(value.props.value)
-    console.log(value)
-    console.log(value._owner.key)
-    console.log(data)
-    console.log(alma)
-    console.log(elso)
+  function handleDropDownChange(event) {
+    // console.log(value.props.value)
+    // console.log(value)
+    // console.log(value._owner.key)
+    // console.log(data)
+    // console.log(alma)
+    // console.log(elso)
+    console.log(event)
 
-    for (let i = 0; i < 20; i++) {
-        if (data[i].id === value._owner.key)
-        {
-            data[i].role = value.props.value;
-        }
-    } 
+    // for (let i = 0; i < 20; i++) {
+    //     if (data[i].id === value._owner.key)
+    //     {
+    //         data[i].role = value.props.value;
+    //     }
+    // } 
 
-    console.log(value.props.value)
+    // console.log(value.props.value)
     
-    axiosInstance
-    .put(`/users/${value._owner.key}/`, {
-      "role": value.props.value
-    })
-    .catch(error => {
-      toast.error(error)
-    });
+    // axiosInstance
+    // .put(`/users/${value._owner.key}/`, {
+    //   "role": value.props.value
+    // })
+    // .catch(error => {
+    //   toast.error(error)
+    // });
   }
   
 

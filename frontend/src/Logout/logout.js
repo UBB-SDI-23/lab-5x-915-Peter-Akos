@@ -9,8 +9,8 @@ function LogoutPage() {
     
     let logoutHandler = () => {
         logout();
-        window.location.reload(true)
         navigate("/");
+        window.location.reload(true)
     }
 
     useEffect(() => {

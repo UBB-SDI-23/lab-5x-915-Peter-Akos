@@ -40,7 +40,7 @@ const Users = () => {
     console.log(data)
 
     for (let i = 0; i < 20; i++) {
-        if (data[i].id == value._owner.key)
+        if (data[i].id === value._owner.key)
         {
             data[i].role = value.props.value;
         }
@@ -61,7 +61,7 @@ const Users = () => {
   const handlePageChange = ((_, value) => {
     setPageNumber(value);
   })
-
+// eslint-disable-next-line
   const LoadUsers = (() => {
     
     axiosInstance
@@ -77,10 +77,10 @@ const Users = () => {
     });
   });
 
-  useEffect(() => {
+  useEffect((LoadUsers) => {
 
     LoadUsers();
-
+// eslint-disable-next-line
   }, [pageNumber, LoadUsers]);
 
 

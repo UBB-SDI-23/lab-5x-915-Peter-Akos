@@ -2,10 +2,10 @@ import { useState, useEffect, createContext } from "react";
 import jwt_decode from "jwt-decode";
 
 const authContext = createContext();
-const URL = "https://bloodclinic.mooo.com/api/token/";
-const URL_DETAIL = "https://bloodclinic.mooo.com/userdetails/";
-// const URL = "https://SArnold-sdi-22-23.mooo.com/api/token/";
-// const URL_DETAIL = "https://SArnold-sdi-22-23.mooo.com/api/user/";
+// const URL = "https://bloodclinic.mooo.com/api/token/";
+// const URL_DETAIL = "https://bloodclinic.mooo.com/userdetails/";
+const URL = "http://localhost:8000/api/token/";
+const URL_DETAIL = "http://localhost:8000/api/userdetails/";
 
 export default authContext;
 
@@ -29,6 +29,9 @@ export const AuthProvider = ({children}) => {
             setTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem('tokens', JSON.stringify(data));
+            localStorage.setItem('access_token', JSON.stringify(data.access));
+            localStorage.setItem('role', JSON.stringify(data.role));
+            console.log(localStorage.getItem('access_token'));
 
             let detailResponse = await fetch(URL_DETAIL + String(jwt_decode(data.access).user_id) + "/", {
                 method: 'GET',
@@ -40,7 +43,9 @@ export const AuthProvider = ({children}) => {
             console.log(detailData)
             if (response.status === 200){
                 localStorage.setItem('paginationValue', detailData.paginationValue)
+                localStorage.setItem('role', detailData.role)
                 setUserLookup(jwt_decode(data.access).user_id)
+                window.location.reload(true)
             } else {
                 console.log("Detail Failed!");
             }
@@ -48,10 +53,12 @@ export const AuthProvider = ({children}) => {
         } else {
             console.log("Authentication Failed!");
         }
+        
     }
 
     let logout = () => {
         localStorage.removeItem('tokens');
+        localStorage.removeItem('access_token');
         setUser(null);
         setTokens(null);
     }
@@ -73,6 +80,7 @@ export const AuthProvider = ({children}) => {
                 setTokens(data);
                 setUser(jwt_decode(data.access));
                 localStorage.setItem('tokens', JSON.stringify(data));
+                localStorage.setItem('access_token', JSON.stringify(data.access));
             } else {
                 logout();
             }

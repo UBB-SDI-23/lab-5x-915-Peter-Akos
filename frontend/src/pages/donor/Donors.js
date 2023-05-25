@@ -51,12 +51,12 @@ const Donors = () => {
 
     const columns = [
       { field: 'id', headerName: 'ID', width: 100 },
-      { field: 'name', headerName: 'Name', width: 300,
+      { field: 'name', headerName: 'Name', width: 200,
       renderCell: (params) => (
         <Link to={`${params.id}/`} className='details-link'>{params.value}</Link>
         )
         },
-      { field: 'createdBy', headerName: 'Created By', width: 300,
+      { field: 'createdBy', headerName: 'Created By', width: 100,
     renderCell: (params) => (
       <Link to={`../user/${params.value.id}/`} className='details-link'>{params.value.username}</Link>
       )
@@ -92,6 +92,7 @@ const Donors = () => {
   
     useEffect(() => {
       const LoadDonors = (() => {
+        console.log(localStorage.getItem("access_token"));
 
         axiosInstance
             .get('donors/?page_number=' + String(pageNumber - 1) + '&page_size=' + String(pageSize))

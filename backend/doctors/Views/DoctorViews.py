@@ -6,11 +6,20 @@ from doctors.models import Doctor, User
 from doctors.serializers import DoctorSerializer, DoctorSerializerDetails, DoctorSerializerAggregated, \
     DoctorNameIdSerializer
 from rest_framework.response import Response
+from doctors.permissions import IsAdmin, IsModerator, IsRegular
+from rest_framework.permissions import IsAuthenticated
 
 
 class ListCreateDoctorView(ListCreateAPIView):
     queryset = Doctor.objects.all().order_by("-id")
     serializer_class = DoctorSerializerAggregated
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'POST':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        return [permission() for permission in permissions_list]
 
     def get_queryset(self):
         queryset = Doctor.objects.annotate(
@@ -22,7 +31,7 @@ class ListCreateDoctorView(ListCreateAPIView):
         page_number = self.request.query_params.get('page_number')
 
         if page_size is None:
-            page_size = 100
+            page_size = 20
         else:
             page_size = int(page_size)
 
@@ -43,6 +52,16 @@ class ListCreateDoctorView(ListCreateAPIView):
 class RetrieveUpdateDestroyDoctorView(RetrieveUpdateDestroyAPIView):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializerDetails
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'PUT':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        if self.request.method == 'DELETE':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        return [permission() for permission in permissions_list]
 
 
 class DoctorCount(APIView):

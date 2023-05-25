@@ -1,9 +1,11 @@
 import React, {useContext, useState, useEffect} from 'react'
-import { Grid, TextField, Button } from '@mui/material'
+import { Grid, TextField, Button, Container } from '@mui/material'
 import authContext from '../../Context/context';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
+
+// const URL_BASE = "http://localhost:8000/api/register/";
 const URL_BASE = "http://localhost:8000/api/register/";
 
 function ActivationPage() {
@@ -38,6 +40,7 @@ function ActivationPage() {
     }, [user, navigate])
 
     return (
+        <Container>
             <form className="registerForm">
                 <Grid container sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", pt: 5 }}>
                     <TextField name="Code" variant="outlined" id="Code" value={code} label="Code" onChange={(e) => { setCode(e.target.value) }}>Code</TextField>
@@ -47,6 +50,9 @@ function ActivationPage() {
                 </Grid>
                 {message ? <h2>Activation successfull!</h2> : <></>}
             </form>
+            <ToastContainer/>
+        </Container>
+            
     )
 }
 

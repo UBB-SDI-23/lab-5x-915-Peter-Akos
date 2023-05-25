@@ -5,10 +5,11 @@ import authContext from '../../Context/context';
 import { useParams } from 'react-router-dom';
 import "./userPage.css"
 
-const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
+// const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
+const URL_BASE = "http://localhost:8000/api/userdetails/";
 
 function UserPage(props) {
-    const bloodbagID = useParams().bloodbagId;
+    const userId = useParams().userId;
     const { user} = useContext(authContext);
     const [ bio, setBio ] = useState("");
     const [ location, setLocation ] = useState("");
@@ -41,15 +42,15 @@ function UserPage(props) {
     }, [])
 
     useEffect(() => {
-        if (bloodbagID === -1)
+        if (userId === -1)
             navigate("/");
         else {
-            fetch(URL_BASE + bloodbagID + "/")
+            console.log("alma");
+            fetch(URL_BASE + userId + "/")
                 .then(uesrDetail => uesrDetail.json())
-                // .then(uesrDetail => console.log(uesrDetail))
                 .then(uesrDetail => fillText(uesrDetail));
         }
-    }, [navigate, fillText, bloodbagID])
+    }, [fillText, navigate, userId])
 
     const paginationHandler = (value) => {
         setPaginationValue(value);
@@ -99,7 +100,7 @@ function UserPage(props) {
                 </Grid>
                 <Grid id='paginationHolder'>
                 {
-                    (user) ? (Number(user.user_id) === Number(bloodbagID)) ? 
+                    (user) ? (Number(user.user_id) === Number(userId)) ? 
                         <Select
                             value={paginationValue}
                             label="12"

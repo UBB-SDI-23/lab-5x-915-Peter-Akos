@@ -3,13 +3,23 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.views import APIView
 
 from doctors.models import Donor
+from doctors.permissions import IsAdmin, IsModerator, IsRegular
 from doctors.serializers import DonorSerializer, DonorSerializerAggregated, DonorNameIdSerializer
 from rest_framework.response import Response
+
+from rest_framework.permissions import IsAuthenticated
 
 
 class ListCreateDonorView(ListCreateAPIView):
     queryset = Donor.objects.all().order_by('-id')
     serializer_class = DonorSerializerAggregated
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'POST':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        return [permission() for permission in permissions_list]
 
     def get_queryset(self):
         queryset = Donor.objects.annotate(
@@ -37,6 +47,16 @@ class ListCreateDonorView(ListCreateAPIView):
 class RetrieveUpdateDestroyDonorView(RetrieveUpdateDestroyAPIView):
     queryset = Donor.objects.all()
     serializer_class = DonorSerializer
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'PUT':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        if self.request.method == 'DELETE':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        return [permission() for permission in permissions_list]
 
 
 class DonorAutoCompleteView(ListCreateAPIView):

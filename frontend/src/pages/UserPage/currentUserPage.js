@@ -1,10 +1,14 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Grid, TextField, InputLabel, Select, MenuItem, Container } from '@mui/material';
+import { Grid, TextField, InputLabel, Select, MenuItem, Container, Button } from '@mui/material';
 import authContext from '../../Context/context';
 import "./userPage.css"
+import jwt_decode from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
 
-const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
+
+// const URL_BASE = "https://bloodclinic.mooo.com/api/userdetails/";
+const URL_BASE = "http://localhost:8000/api/userdetails/";
 
 function CurrentUserPage(props) {
     const { user} = useContext(authContext);
@@ -38,13 +42,23 @@ function CurrentUserPage(props) {
         console.log(userLook)
     }, [])
 
+    let adminHandler = () => {
+        console.log(jwt_decode(localStorage.getItem('access_token')).role)
+        if(jwt_decode(localStorage.getItem('access_token')).role == "Admin")
+        {
+            navigate("admin/");
+        }
+        else{
+            toast.error("You have to be admin to access this page")
+        }
+    }
+
     useEffect(() => {
         if (user === null)
             navigate("/");
         else {
             fetch(URL_BASE + user.user_id + "/")
                 .then(uesrDetail => uesrDetail.json())
-                // .then(uesrDetail => console.log(uesrDetail))
                 .then(uesrDetail => fillText(uesrDetail));
         }
     }, [navigate, fillText, user])
@@ -107,9 +121,14 @@ function CurrentUserPage(props) {
                             <MenuItem value={25}>25</MenuItem>
                             <MenuItem value={50}>50</MenuItem>
                             <MenuItem value={100}>100</MenuItem>
-                        </Select> : <></> 
+                        </Select> : <></>
+                        
+                    
                 }
                 </Grid>
+
+                <Button variant="contained" color='error' onClick={adminHandler} id='logoutBtn' >Admin Page</Button>
+                <ToastContainer/>
             </Container>
     )
 }

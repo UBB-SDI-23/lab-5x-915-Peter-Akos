@@ -74,6 +74,12 @@ const EditDonor = () => {
             toast.error(errorMessages[0].detail);
             return;
         }
+
+        if (!localStorage.getItem('tokens'))
+        {
+            toast.error("Log in to edit the database");
+            return;
+        }
         
         axiosInstance
             .put('donors/' + donorId, {

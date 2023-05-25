@@ -4,11 +4,20 @@ from rest_framework.views import APIView
 from doctors.models import BloodBag
 from doctors.serializers import BloodBagSerializer, BloodBagSerializerDetails
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from doctors.permissions import IsAdmin, IsModerator, IsRegular
 
 
 class ListCreateBloodBagView(ListCreateAPIView):
     queryset = BloodBag.objects.all()
     serializer_class = BloodBagSerializerDetails
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'POST':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        return [permission() for permission in permissions_list]
 
     def get_queryset(self):
         queryset = BloodBag.objects.all().order_by("-id")
@@ -34,6 +43,16 @@ class ListCreateBloodBagView(ListCreateAPIView):
 class RetrieveUpdateDestroyBloodBagView(RetrieveUpdateDestroyAPIView):
     queryset = BloodBag.objects.all()
     serializer_class = BloodBagSerializerDetails
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'PUT':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        if self.request.method == 'DELETE':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsModerator)
+        return [permission() for permission in permissions_list]
 
 
 class BloodBagCount(APIView):

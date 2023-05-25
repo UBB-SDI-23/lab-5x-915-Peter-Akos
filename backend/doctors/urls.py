@@ -10,7 +10,8 @@ from doctors.Views.DoctorsDonorsViews import ListCreateDonorsofDoctorView, ListC
 from doctors.Views.DonorViews import ListCreateDonorView, RetrieveUpdateDestroyDonorView, DonorCount, \
     DonorAutoCompleteView
 from doctors.Views.Reports import ClinicReport, DoctorBloodBagReport, DonorReport
-from doctors.Views.Utils import schema_view, MyTokenObtainView, RegisterView, ConfirmView, UserDetailsView
+from doctors.Views.Utils import schema_view, MyTokenObtainView, RegisterView, ConfirmView, UserDetailsView, \
+    ListUsersView, UpdateUserView
 from rest_framework_simplejwt import views as jwt_views
 
 
@@ -37,9 +38,12 @@ urlpatterns = [
     path('doctorsdonors/', ListCreateDoctorsDonorsView.as_view()),
     path('doctorsdonors/<int:pk>', RetrieveUpdateDestroyDoctorsDonorsView.as_view()),
     path('docs', schema_view.with_ui('swagger', cache_timeout=0)),
-    path('api/token/', MyTokenObtainView.as_view()),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view()),
+    path('api/token/', MyTokenObtainView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', RegisterView.as_view()),
     path('api/register/confirm/<int:code>/', ConfirmView.as_view()),
     path('api/userdetails/<int:id>/', UserDetailsView.as_view()),
+
+    path('users/', ListUsersView.as_view(), name="list_users_view"),
+    path('users/<int:pk>/', UpdateUserView.as_view(), name="update_user_view"),
 ]

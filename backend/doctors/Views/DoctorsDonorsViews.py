@@ -4,12 +4,20 @@ from doctors.models import DoctorsDonors
 from doctors.serializers import DonorsOfDoctorSerializer, DoctorsDonorsSerializer
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from doctors.permissions import IsAdmin, IsModerator, IsRegular
 
 
 class ListCreateDonorsofDoctorView(ListCreateAPIView):
     queryset = DoctorsDonors.objects.all().order_by('-id')
     serializer_class = DonorsOfDoctorSerializer
-    page_size = 100
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'POST':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        return [permission() for permission in permissions_list]
 
     def get_queryset(self, *args, **kwargs):
         return self.queryset.filter(doctor=self.kwargs.get('doctor'))
@@ -27,7 +35,24 @@ class ListCreateDoctorsDonorsView(ListCreateAPIView):
     queryset = DoctorsDonors.objects.all()
     serializer_class = DoctorsDonorsSerializer
 
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'POST':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        return [permission() for permission in permissions_list]
+
 
 class RetrieveUpdateDestroyDoctorsDonorsView(RetrieveUpdateDestroyAPIView):
     queryset = DoctorsDonors.objects.all()
     serializer_class = DoctorsDonorsSerializer
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'PUT':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        if self.request.method == 'DELETE':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsModerator)
+        return [permission() for permission in permissions_list]

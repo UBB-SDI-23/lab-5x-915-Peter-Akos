@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
 import { ToastContainer, toast } from 'react-toastify';
+import jwt_decode from "jwt-decode";
 
 
 const AddDonor = () => {
@@ -52,6 +53,12 @@ const AddDonor = () => {
             toast.error(errorMessages[0].detail);
             return;
         }
+
+        if (!localStorage.getItem('tokens'))
+        {
+            toast.error("Log in to edit the database");
+            return;
+        }
         
         axiosInstance
             .post('donors/', {
@@ -60,6 +67,9 @@ const AddDonor = () => {
                 'email': email,
                 'birthday': birthday,
                 'citizenship': citizenship,
+                'createdBy':{
+                    'username': localStorage.getItem('tokens') ? jwt_decode(JSON.parse(localStorage.getItem('tokens')).access)['user_id'] : null
+                }
             })
             .then(() => {
                 navigate("/donors/");
@@ -67,7 +77,7 @@ const AddDonor = () => {
             .catch((err) => {
                 console.log(err)
                 console.log(err.response.data.error[0])
-                toast.error(err.response.data.detail);
+                toast.error(err.response.data.detail);  
                 toast.error(err.response.data.error[0]);
             });
     };

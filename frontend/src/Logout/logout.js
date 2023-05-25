@@ -9,12 +9,16 @@ function LogoutPage() {
     
     let logoutHandler = () => {
         logout();
-        navigate("/login");
+        window.location.reload(true)
+        navigate("/");
     }
 
     useEffect(() => {
-        if (!user)
+        if (!user){
+            
             navigate("/");
+        }
+            
     }, [user, navigate])
 
     return (

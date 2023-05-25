@@ -40,9 +40,18 @@ class UserDetailSerializer(DynamicFieldsModelSerializer):
         fields = '__all__'
 
 
+class UserSerializer(DynamicFieldsModelSerializer):
+    # paginationValue = serializers.CharField(required=False)
+
+    class Meta:
+        model = User
+        fields = ['username', 'id', 'role']
+        read_only_fields = ['username']
+
+
 class DoctorSerializerAggregated(DynamicFieldsModelSerializer):
     total_donors = serializers.IntegerField(required=False)
-    createdBy = UserNameIdSerializer(read_only=True)
+    createdBy = UserNameIdSerializer()
 
     class Meta:
         model = Doctor
@@ -52,15 +61,20 @@ class DoctorSerializerAggregated(DynamicFieldsModelSerializer):
     def validate(self, data):
         if type(data["salary"]) is not int or data["salary"] < 0:
             raise serializers.ValidationError({"error": "Doctor salary must be a positive integer"})
-        if type(data["university_gpa"]) is not int or data["university_gpa"] < 0:
+        if type(data["university_gpa"]) is not float or data["university_gpa"] < 0:
             raise serializers.ValidationError({"error": "Doctor university GPA must be a positive integer"})
         if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
             raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
         if not re.search("^[a-zA-Z0-9 ]*$", data["title"]):
             raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
-        if not re.search("^[a-zA-Z0-9 .,!?;:]*$", data["description"]):
-            raise serializers.ValidationError({"error": "Description can only contain numbers and letters"})
         return data
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('createdBy')
+        doctor = Doctor.objects.create(**validated_data)
+        doctor.createdBy_id = user_data['username']
+        doctor.save()
+        return doctor
 
 
 class DoctorSerializer(DynamicFieldsModelSerializer):
@@ -87,7 +101,8 @@ class DoctorSerializer(DynamicFieldsModelSerializer):
 
 
 class ClinicSerializer(serializers.ModelSerializer):
-    createdBy = UserNameIdSerializer(read_only=True)
+    createdBy = UserNameIdSerializer()
+
     class Meta:
         model = Clinic
         fields = "__all__"
@@ -111,6 +126,13 @@ class ClinicSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"error": "Title can only contain numbers and letters"})
         return data
 
+    def create(self, validated_data):
+        user_data = validated_data.pop('createdBy')
+        clinic = Clinic.objects.create(**validated_data)
+        clinic.createdBy_id = user_data['username']
+        clinic.save()
+        return clinic
+
 
 class DoctorSerializerDetails(serializers.ModelSerializer):
     hospital = ClinicSerializer(required=False, read_only=True)
@@ -124,7 +146,7 @@ class DoctorSerializerDetails(serializers.ModelSerializer):
     def validate(self, data):
         if type(data["salary"]) is not int or data["salary"] < 0:
             raise serializers.ValidationError({"error": "Doctor salary must be a positive integer"})
-        if type(data["university_gpa"]) is not int or data["university_gpa"] < 0:
+        if type(data["university_gpa"]) is not float or data["university_gpa"] < 0:
             raise serializers.ValidationError({"error": "Doctor university GPA must be a positive integer"})
         if not re.search("^[a-zA-Z0-9 ]*$", data["name"]):
             raise serializers.ValidationError({"error": "Name can only contain numbers and letters"})
@@ -195,7 +217,7 @@ class DonorSerializer(serializers.ModelSerializer):
 
 class DonorSerializerAggregated(serializers.ModelSerializer):
     nr_doctors = serializers.IntegerField(required=False)
-    createdBy = UserNameIdSerializer(read_only=True)
+    createdBy = UserNameIdSerializer()
 
     class Meta:
         model = Donor
@@ -215,6 +237,14 @@ class DonorSerializerAggregated(serializers.ModelSerializer):
         if not re.search("^[a-zA-Z ]*$", data["citizenship"]):
             raise serializers.ValidationError({"error": "Citizenship can only contain letters"})
         return data
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('createdBy')
+        print(user_data)
+        donor = Donor.objects.create(**validated_data)
+        donor.createdBy_id = user_data['username']
+        donor.save()
+        return donor
 
 
 class BloodBagSerializer(serializers.ModelSerializer):
@@ -253,6 +283,7 @@ class DoctorsDonorTestSerializer(serializers.ModelSerializer):
 
 class BloodBagSerializerDetails(serializers.ModelSerializer):
     source = DoctorsDonorTestSerializer()
+    createdBy = UserNameIdSerializer()
 
     class Meta:
         model = BloodBag
@@ -262,13 +293,15 @@ class BloodBagSerializerDetails(serializers.ModelSerializer):
     def create(self, validated_data):
         donor_id = validated_data['source']['donor']['name']
         doctor_id = validated_data['source']['doctor']['name']
+        createdBy_id = validated_data.pop('createdBy')['username']
         try:
             lookup = DoctorsDonors.objects.get(donor_id=donor_id, doctor_id=doctor_id)
         except:
             print("does not exit")
-            lookup = DoctorsDonors(doctor_id=doctor_id, donor_id=donor_id)
+            lookup = DoctorsDonors(doctor_id=doctor_id, donor_id=donor_id, createdBy_id=createdBy_id)
             lookup.save()
-        res = BloodBag(source_id=lookup.id, quantity=validated_data['quantity'], date=validated_data['date'])
+        res = BloodBag(source_id=lookup.id, quantity=validated_data['quantity'], date=validated_data['date'],
+                       createdBy_id=createdBy_id)
         res.save()
         return res
 

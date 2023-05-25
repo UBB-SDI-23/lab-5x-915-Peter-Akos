@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
 import { ToastContainer, toast } from 'react-toastify';
+import jwt_decode from "jwt-decode";
 
 
 const AddBloodBag = () => {
@@ -94,6 +95,12 @@ const AddBloodBag = () => {
             return;
         }
 
+        if (!localStorage.getItem('tokens'))
+        {
+            toast.error("Log in to edit the database");
+            return;
+        }
+
         axiosInstance
             .post('bloodbags/', {
                 'source':{'donor':{'id':'', 'name':donor.id}, 'doctor':{'id':'', 'name':doctor.id}},
@@ -101,6 +108,9 @@ const AddBloodBag = () => {
                 'doctor_id':doctor.id,
                 'quantity':quantity,
                 'date':date,
+                'createdBy':{
+                    'username': localStorage.getItem('tokens') ? jwt_decode(JSON.parse(localStorage.getItem('tokens')).access)['user_id'] : null
+                }
             })
             .then((res) => {
                 console.log(res.data);

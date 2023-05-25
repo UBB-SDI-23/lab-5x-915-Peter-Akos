@@ -4,12 +4,20 @@ from rest_framework.views import APIView
 from doctors.models import Clinic
 from doctors.serializers import ClinicSerializer, ClinicSerializerDetails, ClinicSerializerAutoComplete
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from doctors.permissions import IsAdmin, IsModerator, IsRegular
 
 
 class ListCreateClinicView(ListCreateAPIView):
     queryset = Clinic.objects.all()
     serializer_class = ClinicSerializer
-    page_size = 100
+
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'POST':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        return [permission() for permission in permissions_list]
 
     def get_queryset(self):
         queryset = Clinic.objects.all().order_by("-id")
@@ -46,6 +54,16 @@ class RetrieveUpdateDestroyClinicView(RetrieveUpdateDestroyAPIView):
     queryset = Clinic.objects.all()
     serializer_class = ClinicSerializerDetails
 
+    def get_permissions(self):
+        permissions_list = []
+        if self.request.method == 'PUT':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsRegular)
+        if self.request.method == 'DELETE':
+            permissions_list.append(IsAuthenticated)
+            permissions_list.append(IsModerator)
+        return [permission() for permission in permissions_list]
+
 
 class ClinicAutoCompleteView(ListCreateAPIView):
     queryset = Clinic.objects.all()
@@ -57,10 +75,8 @@ class ClinicAutoCompleteView(ListCreateAPIView):
         return queryset[:20]
 
 
-
 class ClinicCount(APIView):
     def get(self, request):
         count = Clinic.objects.all().count()
         print(count)
-        return Response({'count':count})
-
+        return Response({'count': count})

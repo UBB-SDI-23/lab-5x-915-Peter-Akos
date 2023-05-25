@@ -2,6 +2,7 @@ import { Button, Container, Input, Typography, Autocomplete, TextField } from '@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const EditDoctor = () => {
 
@@ -63,14 +64,20 @@ const EditDoctor = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!localStorage.getItem('tokens'))
+        {
+            toast.error("Log in to edit the database");
+            return;
+        }
         
         axiosInstance
             .put('doctors/' + doctorId, {
                 'name':name,
                 'title':title,
-                'salary': salary,
+                'salary': parseInt(salary),
                 'hospital': clinic.id,
-                'university_gpa': university_gpa,
+                'university_gpa': Number(university_gpa),
             })
             .then(() => {
                 navigate('/doctors/' + doctorId );
@@ -146,6 +153,8 @@ const EditDoctor = () => {
                 </Container>
             </Container>
         </form>
+
+        <ToastContainer />
 
         </Container>
         

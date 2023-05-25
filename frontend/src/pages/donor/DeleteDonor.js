@@ -3,6 +3,7 @@ import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const DeleteDonorConfirmation = () => {
 
@@ -27,6 +28,12 @@ const DeleteDonorConfirmation = () => {
 
     const DeleteDonor = (event) => {
         event.stopPropagation();
+
+        if (!localStorage.getItem('tokens'))
+        {
+            toast.error("Log in to edit the database");
+            return;
+        }
     
         axiosInstance
           .delete('donors/' + donorId)
@@ -36,7 +43,8 @@ const DeleteDonorConfirmation = () => {
     
           })
           .catch((err) => {
-            alert(err);
+            toast.error("You don't have access to this object")
+            toast.error(err.detail)
           });
     
           
@@ -65,7 +73,7 @@ const DeleteDonorConfirmation = () => {
                 No
                 </Button>
             </Box>
-  
+          <ToastContainer/>
         </Container>
       </>
     )

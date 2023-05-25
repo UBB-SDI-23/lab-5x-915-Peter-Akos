@@ -33,6 +33,8 @@ import UserPage from './pages/UserPage/userPage';
 import CurrentUserPage from './pages/UserPage/currentUserPage';
 import RegisterPage from './pages/Register/registerPage';
 import ActivationPage from './pages/Register/registerActivation';
+import Admin from './pages/Admin/Admin';
+import Users from './pages/Admin/Users';
 
 function App() {  
   return (
@@ -107,8 +109,23 @@ function App() {
       <Route path="user/" >
         
         <Route index element={<CurrentUserPage />}/>
-        <Route path=":bloodbagId/" element={<UserPage />} />
+        <Route path=":userId/" element={<UserPage />} />
+        <Route path="admin/" element={<Users />}>
+        
       </Route>
+      </Route>
+
+
+      <Route path="admin/" >
+        
+        <Route index element={<Admin />}/>
+      </Route>
+
+      <Route path="users/" >
+        
+        <Route index element={<Users />}/>
+      </Route>
+
 
       <Route path="*" element={<Page404 />} />
     </Route>

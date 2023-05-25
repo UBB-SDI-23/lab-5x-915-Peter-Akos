@@ -2,6 +2,8 @@ import { Button, Container, Input, Typography, TextField,Autocomplete} from '@mu
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import jwt_decode from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const AddDoctor = () => {
@@ -36,14 +38,23 @@ const AddDoctor = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!localStorage.getItem('tokens'))
+        {
+            toast.error("Log in to edit the database");
+            return;
+        }
         
         axiosInstance
             .post('doctors/', {
                 'name':name,
                 'title':title,
-                'salary': salary,
-                'university_gpa': university_gpa,
+                'salary': parseInt(salary),
+                'university_gpa': parseInt(university_gpa),
                 'hospital':clinic,
+                'createdBy':{
+                    'username': localStorage.getItem('tokens') ? jwt_decode(JSON.parse(localStorage.getItem('tokens')).access)['user_id'] : null
+                }
             })
             .then(() => {
 
@@ -113,7 +124,7 @@ const AddDoctor = () => {
                 </Container>
             </Container>
         </form>
-
+        <ToastContainer />
         </Container>
         
     </>

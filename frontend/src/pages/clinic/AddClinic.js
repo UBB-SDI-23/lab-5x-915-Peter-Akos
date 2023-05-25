@@ -2,6 +2,8 @@ import { Button, Container, Input, Typography} from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import jwt_decode from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const AddClinic = () => {
@@ -17,6 +19,12 @@ const AddClinic = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!localStorage.getItem('tokens'))
+        {
+            toast.error("Log in to edit the database");
+            return;
+        }
         
         axiosInstance
             .post('clinics/', {
@@ -25,6 +33,9 @@ const AddClinic = () => {
                 'address': address,
                 'beds': beds,
                 'nrRooms':nrRooms,
+                'createdBy':{
+                    'username': localStorage.getItem('tokens') ? jwt_decode(JSON.parse(localStorage.getItem('tokens')).access)['user_id'] : null
+                }
             })
             .then(() => {
 
@@ -80,6 +91,8 @@ const AddClinic = () => {
                 </Container>
             </Container>
         </form>
+
+        <ToastContainer />
 
         </Container>
         

@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react'
-import { Grid, TextField, Button, Container } from '@mui/material'
+import { TextField, Button, Container } from '@mui/material'
 import authContext from '../../Context/context';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,6 +19,7 @@ function LoginPage() {
         login(username, password);
         if (localStorage.getItem('tokens')){
             navigate("/");
+            window.location.reload(true)
         }
     }
 

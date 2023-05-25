@@ -5,13 +5,14 @@ from django.utils import timezone
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveAPIView, ListAPIView, UpdateAPIView
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from doctors.models import User, UserDetail, Clinic, Doctor, Donor, BloodBag
-from doctors.serializers import MyTokenObtainPairSerializer, UserDetailSerializer
+from doctors.serializers import MyTokenObtainPairSerializer, UserDetailSerializer, UserSerializer
 from rest_framework.response import Response
+from doctors.permissions import IsAdmin
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -106,3 +107,36 @@ class UserDetailsView(APIView):
         res['numberOfBloodBags'] = numberOfBloodBags
         res['userName'] = username
         return Response(res)
+
+
+class ListUsersView(ListAPIView):
+    permission_classes = [IsAdmin]
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    def get_queryset(self):
+        queryset = User.objects.all().order_by('id')
+
+        page_size = self.request.query_params.get('page_size')
+        page_number = self.request.query_params.get('page_number')
+
+        if page_size is None:
+            page_size = 20
+        else:
+            page_size = int(page_size)
+
+        if page_number is None:
+            page_number = 0
+        else:
+            page_number = int(page_number)
+
+        ret_from = page_number * page_size
+        ret_to = page_size * (page_number + 1)
+
+        return queryset[ret_from:ret_to]
+
+
+
+class UpdateUserView(UpdateAPIView):
+    permission_classes = [IsAdmin]
+    serializer_class = UserSerializer
+    queryset = User.objects.all()

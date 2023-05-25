@@ -2,6 +2,8 @@ import { Button, Container, Input, Typography, Autocomplete, TextField } from '@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../axios';
+import jwt_decode from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
 
 const EditBloodBag = () => {
 
@@ -79,6 +81,12 @@ const EditBloodBag = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!localStorage.getItem('tokens'))
+        {
+            toast.error("Log in to edit the database");
+            return;
+        }
         
         axiosInstance
             .put('bloodbags/' + bloodbagId, {
@@ -87,6 +95,9 @@ const EditBloodBag = () => {
                 'doctor_id':doctor.id,
                 'quantity':quantity,
                 'date':date,
+                'createdBy':{
+                    'username': localStorage.getItem('tokens') ? jwt_decode(JSON.parse(localStorage.getItem('tokens')).access)['user_id'] : null
+                }
             })
             .then((res) => {
                 console.log(res.data);
@@ -179,6 +190,8 @@ const EditBloodBag = () => {
                 </Container>
             </Container>
         </form>
+
+        <ToastContainer />
 
         </Container>
         

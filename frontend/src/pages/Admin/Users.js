@@ -16,48 +16,44 @@ const Users = () => {
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'username', headerName: 'Username', width: 300 },
     { field: 'role', headerName: 'Role', width: 300,
-      renderCell: (params) => (
+      renderCell: (params) => { 
+        const row  = params.row;
+        // console.log(row)
+        return (
         <Select
             labelId="roleLabel"
             id="roleId"
             value={params.value}
             label="Role"
             sx={{width:"90%"}}
-            onChange={handleDropDownChange}
+            onChange={(event) => handleDropDownChange(event, row)}
         >
             <MenuItem value={'Regular'}>Regular</MenuItem>
             <MenuItem value={'Moderator'}>Moderator</MenuItem>
             <MenuItem value={'Admin'}>Admin</MenuItem>
         </Select>
-      )
+      )}
     },
   ];
 
-  function handleDropDownChange(event) {
-    // console.log(value.props.value)
-    // console.log(value)
-    // console.log(value._owner.key)
-    // console.log(data)
-    // console.log(alma)
-    // console.log(elso)
-    console.log(event)
+  function handleDropDownChange(event, row) {
+    console.log(event.target.value)
+    console.log(row.id)
 
-    // for (let i = 0; i < 20; i++) {
-    //     if (data[i].id === value._owner.key)
-    //     {
-    //         data[i].role = value.props.value;
-    //     }
-    // } 
-
-    // console.log(value.props.value)
+    for (let i = 0; i < 20; i++) {
+        if (data[i].id === row.id)
+        {
+            data[i].role = event.target.value;
+        }
+    } 
     
-    // axiosInstance
-    // .put(`/users/${value._owner.key}/`, {
-    //   "role": value.props.value
-    // })
-    // .catch(error => {
-    //   toast.error(error)
-    // });
+    axiosInstance
+    .put(`/users/${row.id}/`, {
+      "role": event.target.value
+    })
+    .catch(error => {
+      toast.error(error)
+    });
   }
   
 
@@ -84,7 +80,7 @@ const Users = () => {
 
     LoadUsers();
 // eslint-disable-next-line
-  }, [pageNumber, LoadUsers]);
+  }, [pageNumber]);
 
 
   return (

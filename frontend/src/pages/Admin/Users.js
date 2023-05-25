@@ -33,12 +33,13 @@ const Users = () => {
     },
   ];
 
-  function handleDropDownChange(_, value, alma) {
+  function handleDropDownChange(elso, value, alma) {
     console.log(value.props.value)
     console.log(value)
     console.log(value._owner.key)
     console.log(data)
     console.log(alma)
+    console.log(elso)
 
     for (let i = 0; i < 20; i++) {
         if (data[i].id === value._owner.key)

@@ -2,6 +2,7 @@ import React, {useContext, useState, useEffect} from 'react'
 import { TextField, Button, Container } from '@mui/material'
 import authContext from '../../Context/context';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 function LoginPage() {
     let {user,login} = useContext(authContext);
@@ -13,6 +14,7 @@ function LoginPage() {
     let loginHandler = () => {
         if (!/^[a-zA-Z0-9 ]+$/.test(username)){
             console.log("Username can only contain numbers and letters");
+            toast.error("Username can only contain numbers and letters");
             return;
         }
 
@@ -20,6 +22,10 @@ function LoginPage() {
         if (localStorage.getItem('tokens')){
             navigate("/");
             window.location.reload(true)
+        }
+        else
+        {
+            toast.error("Incorrect login credentials");
         }
     }
 
@@ -37,6 +43,7 @@ function LoginPage() {
         <Button variant="contained" color='error' onClick={loginHandler} id='loginButton' margin='normal'>Log In</Button>
 
     </form>
+        <ToastContainer/>
         </Container>
         
         
